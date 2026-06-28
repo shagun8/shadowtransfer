@@ -1,0 +1,134 @@
+# Configuration for Shadow Attribute Extraction and Analysis
+
+# ============================================================================
+# PATHS
+# ============================================================================
+paths:
+  # Base data directory
+  base_data_root: "${PROJECT_ROOT}/data/Final_data_test/"
+  
+  # Metadata
+  metadata_json: "${PROJECT_ROOT}/data/Final_data_test/metadata/mapping.json"
+  
+  # Model checkpoints directory
+  checkpoints_dir: "${PROJECT_ROOT}/data/mamnet/outputs/"
+  
+  # Output directory for all results
+  output_root: "${PROJECT_ROOT}/data/mamnet//attribute_analysis/"
+
+# ============================================================================
+# DATA SELECTION
+# ============================================================================
+data:
+  # Cities to process
+  cities: ["chicago", "miami", "phoenix"]  # or specific: ["chicago"]
+  
+  # Resolutions to process
+  resolutions: ["highres", "midres"]  # or specific: ["highres"]
+  
+  # Only process test split
+  split: "test"
+  
+  # For quick testing - set to null for all images
+  # max_images_per_city: 10  # uncomment for testing
+  max_images_per_city: null  # process all
+
+# ============================================================================
+# MODEL INFERENCE
+# ============================================================================
+inference:
+  # Models to run inference on
+  models:
+    - name: "mamnet"
+      # Two checkpoint patterns for LOCO evaluation
+      within_checkpoint_pattern: "mamnet_{city}_{resolution}_*"
+      loco_checkpoint_pattern: "mamnet_loco_holdout_{city}_{resolution}_*"
+  
+  # Inference parameters
+  batch_size: 16
+  num_workers: 4
+  img_size: 384
+  device: "cuda"
+
+# ============================================================================
+# ATTRIBUTE EXTRACTION PARAMETERS
+# ============================================================================
+attributes:
+  # Thresholds
+  thresholds:
+    # Minimum shadow area (pixels) to consider as valid component
+    min_component_size: 10
+    
+    # For small_region_noise_ratio: components smaller than this are "noise"
+    # As percentage of mean shadow size
+    small_region_threshold_pct: 0.1  # 10% of mean
+    
+    # Edge detection parameters
+    edge:
+      canny_low: 50
+      canny_high: 150
+    
+    # Boundary detection
+    boundary:
+      dilation_kernel_size: 3  # for boundary sharpness
+  
+  # Processing
+  processing:
+    # Use multiprocessing for attribute extraction
+    use_multiprocessing: true
+    num_processes: 16  # adjust based on your CPU cores
+    
+    # Batch size for processing
+    batch_size: 50
+
+# ============================================================================
+# OUTPUT STRUCTURE
+# ============================================================================
+# OLD output.structure - UPDATE TO:
+output:
+  structure:
+    predictions: "predictions/{eval_type}/{city}/{resolution}"  # eval_type: within or loco
+    attributes: "attributes/{source}"  # source: ground_truth, within, or loco
+    analysis: "analysis"
+    figures: "figures"
+  
+  # CSV naming
+  csv:
+    # Component-level (one row per component)
+    component_level: "{source}_component_attributes_{city}_{resolution}.csv"
+    
+    # Image-level (one row per image, aggregated stats)
+    image_level: "{source}_image_attributes_{city}_{resolution}.csv"
+    
+    # Metrics (F1, IoU per image)
+    metrics: "{model_name}_metrics_{city}_{resolution}.csv"
+
+# ============================================================================
+# ATTRIBUTE CATEGORIES
+# ============================================================================
+# Which attributes to extract (set to false to skip)
+extract:
+  image_difficulty: true      # Brightness, contrast, edges, texture
+  shadow_properties: true     # Coverage, geometry, contrast
+  continuity: true            # Fragmentation, connectivity
+  scale: true                 # Resolution-specific
+
+# ============================================================================
+# ANALYSIS PARAMETERS
+# ============================================================================
+analysis:
+  # Correlation analysis
+  correlation:
+    method: "spearman"  # or "pearson"
+    significance_level: 0.05
+  
+  # Binning for attribute analysis
+  bins:
+    num_bins: 4  # quartiles
+    method: "quantile"  # or "uniform"
+  
+  # Visualization
+  visualization:
+    dpi: 300
+    figure_format: "png"  # or "pdf"
+    color_palette: "Set2"

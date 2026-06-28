@@ -1,0 +1,56 @@
+# ── Checkpoints / weights (host on Hugging Face, not GitHub) ──
+*.pth
+*.pt
+*.ckpt
+*.safetensors
+weights/
+checkpoints/
+*/outputs/
+**/predictions/
+
+# ── DINOv3 vendored upstream (use the git submodule instead) ──
+dinov3/dinov3/
+
+# ── Data ──
+data/
+*/data/Final_data_test/
+*.npy
+*.npz
+*.tif
+*.tiff
+
+# ── Experiment tracking / logs ──
+wandb/
+runs/
+tensorboard/
+*.log
+*.out
+*.err
+slurm-*.out
+
+# ── Results artifacts (regenerate from code) ──
+*.json.bak
+analysis_results/
+*_results/
+fig*_final/
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# ── Internal audit trail (never publish; lives in a private sibling dir) ──
+ANONYMITY_REPORT.md
+
+# ── OS / editor ──
+.DS_Store
+.idea/
+.vscode/
+*.swp
