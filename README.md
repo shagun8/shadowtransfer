@@ -10,7 +10,7 @@ appendices.
 > **Anonymity:** this is an anonymized release. All cluster-specific settings now resolve from
 > **four environment variables** — `PROJECT_ROOT`, `SLURM_ACCOUNT`, `SLURM_PARTITION`, `NODE` —
 > rather than hard-coded paths. Set them once (see [Configuration](#configuration)) instead of
-> editing every script. See [`ANONYMITY_REPORT.md`](ANONYMITY_REPORT.md).
+> editing every script. 
 
 ## Configuration
 Every path, SLURM account, and partition resolves from a single set of environment variables.
