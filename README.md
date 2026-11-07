@@ -1,13 +1,17 @@
 # ShadowTransfer
 
-Training and evaluation code for **ShadowTransfer** (NeurIPS 2026 submission, under
-double-blind review). The repository reproduces the shadow-detection transfer study across
+Training and evaluation code for **ShadowTransfer: A Geographic Transfer Benchmark for Overhead
+Shadow Detection** (NeurIPS 2026, Track on Evaluations and Datasets). The repository reproduces the shadow-detection transfer study across
 three segmentation backbones (**MAMNet**, **OGLANet**, **DINOv3**) under a leave-one-city-out
 (LOCO) geographic-transfer protocol, the seven domain-generalization baselines evaluated in
 the paper, our method (**SIB**), and the diagnostic analyses behind Sections 4–5 and the
 appendices.
 
-> **Anonymity:** this is an anonymized release. All cluster-specific settings now resolve from
+- **Dataset:** <https://huggingface.co/datasets/shagunmittal/ShadowTransfer>
+  (DOI [10.57967/hf/11483](https://doi.org/10.57967/hf/11483))
+- **Citation:** see [Citation](#citation)
+
+> **Configuration:** all cluster-specific settings resolve from
 > **four environment variables** — `PROJECT_ROOT`, `SLURM_ACCOUNT`, `SLURM_PARTITION`, `NODE` —
 > rather than hard-coded paths. Set them once (see [Configuration](#configuration)) instead of
 > editing every script. 
@@ -52,8 +56,8 @@ The annotated tree below marks the **entry points you run** (`▶`); unmarked it
 imported modules, or generated config that the entry points pull in.
 
 ```
-shadowtransfer-release/
-├── README.md  MANIFEST.md  CALLGRAPH.md  ORPHANS.md  ANONYMITY_REPORT.md  LICENSE
+shadowtransfer/
+├── README.md  MANIFEST.md  CALLGRAPH.md  REPO_SKELETON.md  LICENSE
 ├── .env.example
 │
 ├── *_submit.sh                 ▶ SLURM submit wrappers (one per analysis script)
@@ -105,7 +109,7 @@ shadowtransfer-release/
 ## Installation
 ```bash
 # 1. clone
-git clone <ANON_REPO_URL> shadowtransfer && cd shadowtransfer
+git clone https://github.com/shagun8/shadowtransfer.git && cd shadowtransfer
 
 # 2. python env (per-architecture requirements are identical; mamnet/requirements.txt suffices)
 python -m venv .venv && source .venv/bin/activate
@@ -129,9 +133,10 @@ git submodule add https://github.com/facebookresearch/dinov3 dinov3/dinov3
 If you use DINOv3, comply with its license and **cite it** in any publication.
 
 ## Data and checkpoints
-The dataset and trained checkpoints are hosted on Hugging Face (siblings):
-- Dataset: `https://huggingface.co/datasets/shadow-transfer-bench/ShadowTransfer`
-- Checkpoints: `https://huggingface.co/datasets/shadow-transfer-bench/ShadowTransfer`
+The dataset is hosted on Hugging Face:
+- Dataset: <https://huggingface.co/datasets/shagunmittal/ShadowTransfer>
+  (DOI [10.57967/hf/11483](https://doi.org/10.57967/hf/11483); paper results use revision `5bef90e`)
+- Layout, counts, and metadata fields are documented on the dataset card.
 
 Point `PROJECT_ROOT` (in `.env`) at a directory laid out as the scripts expect:
 ```
@@ -245,6 +250,30 @@ wrapper (`*_submit.sh`); the table lists the python entry point each RUN invokes
 | `tempscale.sh` / `tempscale_submit.sh` | temp-scaling RUN/SUBMIT (cd's into an arch dir) | invokes `<arch>/tempscale_eval.py` | §5.3 |
 | `runonefile.sh` / `runonefile_submit.sh` | one-shot driver for inference analysis | invokes `analyze_inference_results.py`, `statistical_analysis.py` | Sec 3.4 |
 
+## Citation
+If you use this code or the dataset, please cite the paper:
+```bibtex
+@inproceedings{mittal2026shadowtransfer,
+  title     = {ShadowTransfer: A Geographic Transfer Benchmark for Overhead Shadow Detection},
+  author    = {Mittal, Shagun and Yeh, Raymond A. and Ukkusuri, Satish},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Track on Evaluations and Datasets},
+  year      = {2026}
+}
+```
+To cite the dataset release itself:
+```bibtex
+@misc{mittal2026shadowtransferdata,
+  author    = {Mittal, Shagun and Yeh, Raymond A. and Ukkusuri, Satish},
+  title     = {{ShadowTransfer} (Revision 5bef90e)},
+  year      = {2026},
+  publisher = {Hugging Face},
+  doi       = {10.57967/hf/11483},
+  url       = {https://huggingface.co/datasets/shagunmittal/ShadowTransfer}
+}
+```
+Please also credit USDA-FSA NAIP for the underlying imagery.
+
 ## License
 Repository code: MIT (see [`LICENSE`](LICENSE)). The DINOv3 backbone is governed by the
 [DINOv3 license](https://github.com/facebookresearch/dinov3) and is not included here.
+The dataset (masks and metadata) is released under CC BY 4.0; see the dataset card.
