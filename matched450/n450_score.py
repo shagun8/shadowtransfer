@@ -43,7 +43,7 @@ from shadowtransfer.armc_dump import sha256_file           # noqa: E402
 from shadowtransfer.metrics import per_image_counts, threshold_and_filter  # noqa
 import armc_r450_rescore as R450                           # noqa: E402
 
-METRICS_PY = BASE / "python/shadowtransfer/metrics.py"
+METRICS_PY = BASE / "shadowtransfer/metrics.py"
 D19 = "d19d5e948f79c5498bf21a0e47d1302b4b13e8a97ff7d2c2a48033d9f1514e13"
 D19_COMMIT = "06021b6"
 SCHEMA_REF = (Path(os.environ["ST_SCRATCH_ROOT"]) / ("dumps/"
@@ -54,8 +54,8 @@ SCHEMA_REF = (Path(os.environ["ST_SCRATCH_ROOT"]) / ("dumps/"
 def code_shas():
     return {
         "metric_module_sha": sha256_file(METRICS_PY),
-        "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
-        "rescore_module_sha": sha256_file(BASE / "python/armc_r450_rescore.py"),
+        "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
+        "rescore_module_sha": sha256_file(BASE / "support/armc_r450_rescore.py"),
         "scorer_sha": sha256_file(Path(__file__).resolve()),
     }
 
@@ -73,7 +73,7 @@ def metric_sha_relation(orig_sha):
     if orig_sha != D19:
         return {"relation": "MISMATCH", "current": cur, "original": orig_sha}
     old = subprocess.run(["git", "-C", str(BASE), "show",
-                          f"{D19_COMMIT}:python/shadowtransfer/metrics.py"],
+                          f"{D19_COMMIT}:shadowtransfer/metrics.py"],
                          capture_output=True, check=True).stdout
     import hashlib
     if hashlib.sha256(old).hexdigest() != D19:

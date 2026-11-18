@@ -309,7 +309,7 @@ def main():
         "runs": sorted({c["loco_run_id"] for c in conditions} |
                        {c["upper_run_id"] for c in conditions}),
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "script": "python/armL_results.py",
+        "script": "appendix_h/armL_results.py",
         "git_hash": conditions[0].get("git_hash") if conditions else None,
         "primary_metric": "two-class boundary-tolerant mIoU at K=2 "
                           "(the Table 38 family, comparable to arm C)",

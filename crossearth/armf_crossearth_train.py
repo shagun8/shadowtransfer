@@ -328,7 +328,7 @@ def main():
             "early_stop_patience": None, "lr": args.lr,
             "batch_size": args.batch_size,
             "metric_module_sha": armc_dump.sha256_file(
-                os.path.join(base, "python/shadowtransfer/metrics.py")),
+                os.path.join(base, "shadowtransfer/metrics.py")),
             "git_hash": None,
             "git_hash_reason": "project root is not a git repository",
             "config_sha256": armc_dump.sha256_bytes(

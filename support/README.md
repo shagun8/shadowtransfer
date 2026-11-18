@@ -12,8 +12,16 @@ release would not run without them.
 | `n450_isw_masks.py` | ISW mask preparation for the matched-450 ISW cells | `matched450/n450_train.py` |
 | `oglanet_probsource.py` | resolves which probability source an OGLANet probe reads | `probes/oglanet_rng_probe*.py` |
 
-`trainaudit_sar_drift.py` is released whole, as run. Only `diff_state` is
-reachable from this release: its other functions import arm-A diagnostic
-modules that are **not** part of the camera-ready release and are not shipped,
-so calling them here raises `ImportError`. `diff_state` itself needs only
-`torch`.
+`trainaudit_sar_drift.py` is released whole, as run. `diff_state`, the function
+the SAR driver uses, needs only `torch`. Its other functions import
+`shadowtransfer.armA_a4_sar_seo`, `shadowtransfer.armA_t1_cesar_adapt` and
+`armA_pilot_train`, which **are** now shipped (the S-EO release pulled them in),
+so those paths resolve as well.
+
+## Added in the second release pass
+
+| File | What it does | Imported / read by |
+|---|---|---|
+| `armd_diag.py` | the appearance-augmentation diagnostic driver | `appendix_h/armd_diag_aggregate.py` hashes it for provenance |
+| `armA_pilot_train.py` | the S-EO phase-1/2 trainer the phase-3 driver builds on | `seo/armA_phase3_train.py`, `support/trainaudit_sar_drift.py` |
+| `armA_seo_histmatch.py` | the S-EO histogram-matching intervention | the §4.2 probe chain |

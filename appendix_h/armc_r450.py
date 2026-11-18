@@ -378,9 +378,9 @@ def main():
         "lr": cfg.get("lr"),
         "batch_size": cfg.get("batch_size"),
 
-        "metric_module_sha": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
-        "metric_module_path": "python/shadowtransfer/metrics.py",
-        "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
+        "metric_module_sha": sha256_file(BASE / "shadowtransfer/metrics.py"),
+        "metric_module_path": "shadowtransfer/metrics.py",
+        "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
         "recompute_script_sha": sha256_file(Path(__file__).resolve()),
         "git_hash": None,
         "git_hash_reason": "project root is not a git repository (CLAUDE.md)",

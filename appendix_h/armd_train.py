@@ -554,7 +554,7 @@ def main():
             # --- augmentation -------------------------------------------------
             "aug_strength": args.aug_strength,
             "aug_params": armd_aug.S3,
-            "aug_module_sha": sha256_file(BASE / "python/shadowtransfer/armd_aug.py"),
+            "aug_module_sha": sha256_file(BASE / "shadowtransfer/armd_aug.py"),
             "aug_applied_to": "train split only",
             "aug_val_test": "val and test are never augmented; asserted at runtime",
             "aug_injection_hook": (
@@ -651,10 +651,10 @@ def main():
             "batch_size": trainer_args.batch_size,
 
             # --- provenance -----------------------------------------------------
-            "metric_module_sha": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
-            "metrics_sha256": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
-            "metric_module_path": "python/shadowtransfer/metrics.py",
-            "armd_s3_module_sha": sha256_file(BASE / "python/shadowtransfer/armd_s3.py"),
+            "metric_module_sha": sha256_file(BASE / "shadowtransfer/metrics.py"),
+            "metrics_sha256": sha256_file(BASE / "shadowtransfer/metrics.py"),
+            "metric_module_path": "shadowtransfer/metrics.py",
+            "armd_s3_module_sha": sha256_file(BASE / "shadowtransfer/armd_s3.py"),
             "metric_module_sha_note": (
                 "the arm D spec expects d19d5e94... That is the sha of the "
                 "COMMITTED metrics.py at git HEAD. The working tree carries 47 "
@@ -663,10 +663,10 @@ def main():
                 "is purely additive, 47 insertions and 0 deletions, below every "
                 "function arm D uses. Recorded as measured; flagged to the "
                 "operator rather than reconciled by this job."),
-            "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
-            "runtime_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_runtime.py"),
+            "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
+            "runtime_module_sha": sha256_file(BASE / "shadowtransfer/armc_runtime.py"),
             "train_script_sha": sha256_file(Path(__file__).resolve()),
-            "armc_train_sha": sha256_file(BASE / "python/armc_train.py"),
+            "armc_train_sha": sha256_file(BASE / "appendix_h/armc_train.py"),
             "git_hash": None,
             "git_hash_reason": (
                 "BASE_PATH became a git repository on 2026-07-28; this field is "

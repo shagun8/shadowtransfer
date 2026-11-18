@@ -11,7 +11,7 @@ that is there now (2026-10-25 inventory). This script settles it by measurement.
 
 TWO CANDIDATE PRODUCERS, 10 passes each
 ---------------------------------------
-Test 1  python/run_inference_probs.py -- the script the logs say wrote them.
+Test 1  run_inference_probs.py -- the script the logs say wrote them.
         Its load_model and _extract_logits are IMPORTED and called, not
         reimplemented, so the checkpoint-loading and logit-extraction semantics
         are the originals byte-for-byte. Its dataset construction and batch size
@@ -415,7 +415,7 @@ def run_one(args):
         pass_fn = lambda: t1_pass(model, device, loader, a, R)
         pipeline = {
             "name": "run_inference_probs.py",
-            "script": "python/run_inference_probs.py",
+            "script": "run_inference_probs.py",
             "dataset_class": "mamnet/data/dataset_enhanced.py "
                              "ShadowDatasetEnhanced",
             "dataset_kwargs": {"task_id": 2, "augment": False,
@@ -449,8 +449,8 @@ def run_one(args):
         pass_fn = lambda: t2_pass(h)
         pipeline = {
             "name": "armf_sar_pass unadapted (TTA with adaptation off)",
-            "script": "python/shadowtransfer/armf_sar_pass.py + "
-                      "python/shadowtransfer/sar.py",
+            "script": "shadowtransfer/armf_sar_pass.py + "
+                      "shadowtransfer/sar.py",
             "spec": "unadapted_spec(): steps=0, "
                     "'unadapted (SAR off; published inference configuration)'",
             "dataset_class": "oglanet/data/dataset_enhanced.py "
@@ -689,14 +689,14 @@ def do_merge(out_root):
         "arm": "C",
         "weakness_ids": ["E-9"],
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "script": "python/oglanet_probsource.py",
+        "script": "support/oglanet_probsource.py",
         "git_hash": None,
         "git_hash_reason": "project root is not a git repository (CLAUDE.md)",
         "provenance_jobs": {"chicago": "17821359", "miami": "17821357",
                             "written": "2026-04-23"},
         "metric": ("foreground-only IoU at K=2 (Appendix E) as the headline, "
                    "two-class K=2 (the Table 38 family) alongside; both from "
-                   "python/shadowtransfer/metrics.py"),
+                   "shadowtransfer/metrics.py"),
         "e9_note": ("erratum E-9: OGLANet inference is nondeterministic, so a "
                     "single pass cannot answer this. The test is whether the "
                     "saved maps' own score falls inside the 10-pass range, "

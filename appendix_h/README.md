@@ -25,3 +25,15 @@ it pools images into a mean, an interval or a p-value.
 Its docstring records evidence, from the published runs' own logs, that MAMNet's
 three LOCO cells trained on 900 images rather than 450. Read that docstring
 before treating the `rung` field of those three cells as authoritative.
+
+## Added in the second release pass
+
+Released under the rule that a script ships if any run it produced is an input
+to a results JSON the camera-ready cites.
+
+| File | What it does | Cited by | Camera-ready section |
+|---|---|---|---|
+| `armd_e200.py` | the 200-epoch appearance-augmentation arm | `results/15` | App. H.2 |
+| `armd_diag_aggregate.py` | aggregates the augmentation diagnostics | `results/15` | App. H.2 |
+| `arme_part2_train.py` | frozen-backbone decoder retrain (part 2) | `results/23` | App. H.3 |
+| `armd_e200_submit.sh`, `armd_e200.sh`, `arme_part2_submit.sh` | SUBMIT wrappers and worker | — | App. H.2–H.3 |

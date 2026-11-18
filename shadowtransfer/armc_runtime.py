@@ -7,7 +7,7 @@ Why this module exists
 Job 20540648 trained cleanly (early stop at epoch 26, best at 16) and then hung
 for ~90 minutes on a 0-byte `metrics_curves.png`, against a 2-hour wall clock.
 The dump directory was never created, so the cell produced nothing at all. The
-figure call is `python/mamnet/train.py:694` (`plot_metrics_curves`), inside
+figure call is `mamnet/train.py:694` (`plot_metrics_curves`), inside
 `Trainer.train()`.
 
 That file is published code: it produced the numbers in Tables 30-32 and other

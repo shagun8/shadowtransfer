@@ -787,16 +787,16 @@ def main():
             "lr": trainer_args.lr,
             "batch_size": trainer_args.batch_size,
 
-            "metric_module_sha": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
-            "metric_module_path": "python/shadowtransfer/metrics.py",
-            "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
+            "metric_module_sha": sha256_file(BASE / "shadowtransfer/metrics.py"),
+            "metric_module_path": "shadowtransfer/metrics.py",
+            "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
             "dump_module_note": (
                 "armc_dump.py was truncated to 0 bytes on 2026-07-28 and "
                 "restored from its own bytecode, verified equivalent "
                 "instruction-for-instruction across all 15 code objects. "
                 "Behaviour is unchanged; the sha is not the pre-incident one "
                 "and will not match what the arm C r450 cells recorded."),
-            "runtime_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_runtime.py"),
+            "runtime_module_sha": sha256_file(BASE / "shadowtransfer/armc_runtime.py"),
             "train_script_sha": sha256_file(Path(__file__).resolve()),
             "git_hash": None,
             "git_hash_reason": (

@@ -370,3 +370,100 @@ asserted anchors: cluster roots → `${PROJECT_ROOT}` / `${ST_SCRATCH_ROOT}`,
 SLURM account → `<SLURM_ACCOUNT>`, alternate-cluster blocks genericized, and the
 analysis-host name removed from two comment strings. Five new environment
 variables are documented in `.env.example`.
+
+---
+
+# Camera-ready additions, second pass
+
+Applied the operator's release rule: **a script ships if any run it produced
+appears in the runs/inputs of a results JSON listed in
+`docs/RESULTS_MAP.md`; otherwise it stays out and is listed here.**
+
+## Released under the rule
+
+| Script | Released to | Cited by |
+|---|---|---|
+| `armA_phase3_train.py` + worker + submit | `seo/` | results/04, 07, 08, 08b, 09, 10, 34 |
+| `armA_b5_sar_probe.py` + worker + submit | `seo/` | results/08 |
+| `armA_b4_probe_inventory.py` + worker + submit | `seo/` | results/08 (`armA_b4_probe_inventory_final.json`) |
+| `armA_b5_t2_roster.py` | `seo/` | results/08 (`armA_b5_t2_roster.json`) |
+| `arme12_retrain.py` + worker + submit | `sib/` | results/19 |
+| `armJ_sib_ablation_score.py` + worker + submit | `sib/` | results/42 |
+| `train_oglanet_sib_tgtfda.py` | `sib/` | results/31 (imported by `n450_tgtfda.py`) |
+| `n450_tgtfda.py` + worker + submit | `matched450/` | results/31–43, which include Table 2 |
+| `n450_tgtfda_donor.py` | `matched450/` | results/31 (hashed by `n450_tgtfda.py`) |
+| `n450_bs4.py` | `matched450/` | results/25 (the `-bs4` cells) |
+| `armB_png_score_midres63.py` + worker + submit | `scoring/` | results/35, 38 (`midres_png_score`) |
+| `armf_sar_crossearth.py` + worker + submit | `sar/` | results/38 |
+| `armd_e200.py`, `armd_diag_aggregate.py` + wrappers | `appendix_h/` | results/15 |
+| `arme_part2_train.py` + submit | `appendix_h/` | results/23 |
+
+Closure dependencies pulled in by the above: `shadowtransfer/`
+`armA_a4_sar_seo.py`, `armA_b5_sar.py`, `armA_methods.py`,
+`armA_t1_cesar_adapt.py`, `armJ_png_only.py`, `armd_diag_lib.py`,
+`arme_part2_runtime.py`, `seo_budget.py`, `seo_crossearth.py`,
+`seo_dataset.py`, `seo_dump.py`, `seo_traineval.py`; `support/`
+`armA_pilot_train.py`, `armA_seo_histmatch.py`, `armd_diag.py`.
+
+Two citations are by **output path**, not filename, and the rule still selects
+them: `results/25` names `*-s42-n450[-bs4]/` (so `n450_bs4.py`) and `results/08`
+names two `delta_logs/*.json` files (so the two scripts that write them).
+`armf_sar_n450.py`, released in the first pass, is likewise cited only as
+`delta_runs/armF_sar_mamnet_*_highres-n450/` in `results/31`.
+
+## Left out under the rule
+
+No run these produced is an input to any results JSON in `docs/RESULTS_MAP.md`:
+
+| Script | Note |
+|---|---|
+| `armB_png_score_std18.py`, `armB_png_score_vanilla9.py` | only the midres-63 re-score is cited (results/35, 38) |
+| `n450_tgtfda_report.py` | reporting helper; no cited JSON reads its output |
+| `n450_lists.py`, `n450_sar_rerun.py`, `n450_isw_submit.sh` | matched-450 scaffolding |
+| `armA_b1_segdesic*`, `armA_b2_isw*`, `armA_b3_ce*`, `armA_b4_*` other than the inventory, `armA_b5_*` other than the probe/roster | arm-A block diagnostics |
+| `armA_wave0_*`, `armA_wave1_*`, `armA_wave2_*` | superseded S-EO waves |
+| `armT2_*`, `armT3_*`, `armT4_*` | harness-factor and nondeterminism probes; `results/21` reads the promoted `delta_runs/` audits, not these scripts |
+| `armL_dinov3_p5drift.py`, `arme_e0_layerscale.py`, `arme_e1_drift.py` | drift and layerscale side probes |
+| `armc_r450_rescore.py`, `armf_sar_grid.py`, `armf_sar_naming_patch.py`, `oglanet_probsource.py`, `n450_isw_masks.py`, `trainaudit_sar_drift.py` | shipped in `support/` as dependencies, not as entry points |
+| `armJ_sib_ablation_provenance_gate.py`, `armd_s3_aggregate.py`, `armd_levels.py`, `armf_sar_lr_pilot.py`, `armf_sar_pilot.py`, `armc_probes_rawpixel.py`, `armA_t1_cesar_run.py` | named only in recorded provenance strings; no cited JSON reads their output. Those strings keep their original `python/...` spelling, which is the Delta-side path, since the file is not in this repository |
+
+## Checkpoints
+
+`docs/CHECKPOINT_INVENTORY.json` now carries a `method_families` block beside
+the 144 published cells: **33 entries, 29 present (9.41 GiB), 4 absent.**
+Inventory only; nothing is uploaded.
+
+- **SIB** — mamnet C4clean LOCO (3), oglanet matched-450 `sibc4` (3,
+  `source_only`) and `sibc4tgt` (3, `unlabeled_target`). The oglanet cells are
+  under the scratch `n450` tree, not the LOCO tree.
+- **BSM** — mamnet (3), oglanet (3), dinov3 (2), crossearth (3).
+- **CrossEarth** — vanilla (3), fda (3), sib (3), under `armF/`.
+- **SAR** — **none by design.** SAR trains nothing and writes no checkpoint; it
+  adapts a parent episodically and discards the adapted weights. The block names
+  the parent instead.
+- **Absent and listed, not omitted:** dinov3 SIB for all three cities (the run
+  dirs hold `args.json`, predictions and `test_results.json` but no `.pth`) and
+  dinov3 BSM chicago.
+
+Probing followed symlinks: `data/{arch}/outputs/{run_dir}` on the project root
+are symlinks into the scratch root, and a scan that does not follow them reports
+zero checkpoints.
+
+## Module shas
+
+`shadowtransfer/metrics.py` ships byte-identical (sha256 `730ad4a5...ab8a6e83`);
+`analysis/07`, `analysis/10` and `analysis/gj_analysis/gj_blob_miss.py` all
+hard-check it. Every other module in `shadowtransfer/` was repointed for the
+release layout, so its sha256 computed here will not match the value recorded in
+a published run's `run.json`. That difference is the path rewrite, not a change
+in behaviour. During this pass the layout rewrite did briefly alter `metrics.py`
+provenance comments; it was restored byte-identical and re-verified against all
+three consumers before the push.
+
+## Metric wording
+
+The paper's metric is the **two-class** boundary-tolerant mIoU at K=2 (App. E).
+Where a scorer also emits a foreground-only column at the same band, that column
+is the scorer **self-check** (results/31, caveat d) and carries shadow-class
+statements only. `matched450/README.md` and `scoring/README.md` state this. No
+code and no number changed.

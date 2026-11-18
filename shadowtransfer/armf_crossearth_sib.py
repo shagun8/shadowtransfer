@@ -225,7 +225,7 @@ def kl_ramp(it, total_iters, frac=KL_WARMUP_FRAC):
 
 
 # =============================================================================
-# LIFTED-FROM python/verify_c_star_val.py :: find_c_star_val (lines 67-76)
+# LIFTED-FROM verify_c_star_val.py :: find_c_star_val (lines 67-76)
 # Body verbatim, imports only. This is the deployment-time coverage selection
 # rule, not a metric; the risk-coverage curve it consumes comes from
 # shadowtransfer.metrics.per_image_rc, which is the canonical implementation.

@@ -263,10 +263,10 @@ def score_cell(c):
                 "the probability-path re-score and are NOT evidence about the "
                 "PNG tree",
         },
-        "metric_module_path": "python/shadowtransfer/metrics.py",
-        "metric_module_sha": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
-        "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
-        "score_script_sha": sha256_file(BASE / "python/armB_png_score.py"),
+        "metric_module_path": "shadowtransfer/metrics.py",
+        "metric_module_sha": sha256_file(BASE / "shadowtransfer/metrics.py"),
+        "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
+        "score_script_sha": sha256_file(BASE / "scoring/armB_png_score.py"),
         "headline_metric": "two-class boundary-tolerant mIoU at K=2, "
                            "per-image mean (Table 38's quantity)",
         "headline_miou_k2_twoclass": miou_k2,

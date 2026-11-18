@@ -305,7 +305,7 @@ def main():
             "early_stop_patience": patience_epochs, "lr": trainer_args.lr,
             "batch_size": bs,
             "metric_module_sha": armc_dump.sha256_file(
-                str(BASE / "python/shadowtransfer/metrics.py")),
+                str(BASE / "shadowtransfer/metrics.py")),
             "git_hash": None,
             "git_hash_reason": "project root is not a git repository",
             "config_sha256": armc_dump.sha256_bytes(

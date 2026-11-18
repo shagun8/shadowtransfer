@@ -58,7 +58,7 @@ Everything else -- Adam, weight decay 1e-4, batch 8, 100 epochs,
 ReduceLROnPlateau(max, 0.5, 3), CE + 0.4 * mean(3 aux CE), h/v-flip, the <10 px
 component filter, and 2-class boundary-tolerant mIoU at K=2 as the checkpoint
 decision metric -- is the published MAMNet configuration, taken from
-data/mamnet/outputs/*/args.json and python/mamnet/train.py.
+data/mamnet/outputs/*/args.json and mamnet/train.py.
 """
 
 import argparse
@@ -509,7 +509,7 @@ def infer_rows(model, loader, run_id, city, device, geo):
     return rows, probs
 
 
-# The sha256 of python/shadowtransfer/metrics.py as it stood in the COMMITTED
+# The sha256 of shadowtransfer/metrics.py as it stood in the COMMITTED
 # tree before 2026-07-31, i.e. before the additive commit that brought
 # `bootstrap_ci` (lifted for arm E Part 2, 47 insertions, 0 deletions, no
 # existing function changed) under version control. Arm L calls bootstrap_ci
@@ -522,16 +522,16 @@ METRIC_MODULE_SHA_PREV = (
 
 def script_shas():
     return {
-        "metric_module_sha": sha256_file(BASE / "python/shadowtransfer/metrics.py"),
+        "metric_module_sha": sha256_file(BASE / "shadowtransfer/metrics.py"),
         "metric_module_sha_prev": METRIC_MODULE_SHA_PREV,
         "metric_module_sha_prev_note": (
             "the committed blob before the 2026-07-31 additive commit of "
             "bootstrap_ci; metric_module_sha is what this run actually used"),
-        "dump_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_dump.py"),
-        "runtime_module_sha": sha256_file(BASE / "python/shadowtransfer/armc_runtime.py"),
-        "model_module_sha": sha256_file(BASE / "python/shadowtransfer/mamnet_r50.py"),
-        "probes_common_sha": sha256_file(BASE / "python/shadowtransfer/armc_probes_common.py"),
-        "probes_ops_sha": sha256_file(BASE / "python/shadowtransfer/armc_probes_ops.py"),
+        "dump_module_sha": sha256_file(BASE / "shadowtransfer/armc_dump.py"),
+        "runtime_module_sha": sha256_file(BASE / "shadowtransfer/armc_runtime.py"),
+        "model_module_sha": sha256_file(BASE / "shadowtransfer/mamnet_r50.py"),
+        "probes_common_sha": sha256_file(BASE / "shadowtransfer/armc_probes_common.py"),
+        "probes_ops_sha": sha256_file(BASE / "shadowtransfer/armc_probes_ops.py"),
         "probe_script_sha": sha256_file(Path(__file__).resolve()),
         "train_script_sha": sha256_file(Path(__file__).resolve()),
     }
@@ -549,7 +549,7 @@ def git_hash():
         if out.returncode == 0:
             dirty = subprocess.run(
                 ["git", "-C", str(BASE), "status", "--porcelain",
-                 "python/armL_train.py", "python/shadowtransfer/mamnet_r50.py",
+                 "appendix_h/armL_train.py", "shadowtransfer/mamnet_r50.py",
                  "python/armL_worker.sh", "python/armL_submit.sh"],
                 capture_output=True, text=True, timeout=30).stdout.strip()
             return out.stdout.strip(), (None if not dirty else
@@ -730,7 +730,7 @@ def cmd_train(args):
             "run_id": run_id, "dataset": "st", "arm": "L",
             "weakness_ids": ["zNBu-W5", "zNBu-W1", "AC1", "AC2"],
             "arch": ARCH, "arch_note": "MAMNet with a ResNet-50 encoder; "
-                                       "python/shadowtransfer/mamnet_r50.py",
+                                       "shadowtransfer/mamnet_r50.py",
             "method": args.cell,
             "method_note": (
                 "CONTRACT.md's method slot carries the 2x2 cell id in both "

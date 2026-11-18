@@ -43,10 +43,10 @@ Band widths written per row:
 # below was lifted verbatim into that module from:
 #   per_image_counts, valid_mask, tp/fp/tn/fn_tol, n_valid_px, n_gt_fg_valid,
 #   empty_fg_valid, logit_means_confusion
-#       <- python/mamnet/utils/evaluation_detailed.py  (078bcc7e...,
+#       <- mamnet/utils/evaluation_detailed.py  (078bcc7e...,
 #          byte-identical across all three arch trees)
 #   the *_str strict counts
-#       <- python/mamnet/utils/metrics.py  (04d778df..., byte-identical
+#       <- mamnet/utils/metrics.py  (04d778df..., byte-identical
 #          across all three arch trees)
 #   per_image_rc, aurc_trapz19, pbar_populations, n_pred_pos
 #       <- python/final_loco/composition_analysis/

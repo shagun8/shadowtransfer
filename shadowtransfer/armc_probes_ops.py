@@ -8,7 +8,7 @@ Arm C §4.2-4.4 probes — the three probe operations.
 Histogram matching: two definitions, both reported
 --------------------------------------------------
 The arm spec asks for PER-CHANNEL CDF matching. The published §4.2 experiment
-(`python/final_loco/experiment_c_histogram_match.py` via
+(`final_loco/experiment_c_histogram_match.py` via
 `experiment_utils.compute_histogram` / `histogram_match_image`) matches a
 single GRAYSCALE CDF and re-applies each pixel's per-channel ratio to it. The
 two are not the same intervention, and the published reading being compared

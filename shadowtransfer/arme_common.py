@@ -322,7 +322,7 @@ def base_run_json(run_id, arch, method, mode, holdout, res, seed, arm="E"):
         "res": res,
         "seed": seed,
         "metric_module_sha": sha256_file(METRIC_MODULE),
-        "metric_module_path": "python/shadowtransfer/metrics.py",
+        "metric_module_path": "shadowtransfer/metrics.py",
         "git_hash": None,
         "git_hash_reason": "project root is not a git repository (CLAUDE.md)",
         "structure_cols": "deferred",

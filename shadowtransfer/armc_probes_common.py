@@ -16,7 +16,7 @@ Lifted, not reimplemented
 -------------------------
 `classify_parameters`, `freeze_encoder`, `freeze_decoder`, `reinit_decoder`
 and `extract_logits` are copied verbatim from the published §4.4 code
-(`python/final_loco/experiment_utils.py`, `experiment_b2_encoder_retrain.py`),
+(`final_loco/experiment_utils.py`, `experiment_b2_encoder_retrain.py`),
 with only imports changed. Those functions produced Table 36; a probe that
 localises the failure differently from the published run is not comparing
 against it. The published files are NOT edited and NOT imported — importing

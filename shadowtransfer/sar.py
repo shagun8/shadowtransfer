@@ -40,7 +40,7 @@ without the side effects:
     the buffers to None in eval mode therefore gives batch statistics exactly
     as `model.train()` would.
   * MAMNet's forward returns a dict of auxiliary outputs when `self.training`
-    is True (`python/mamnet/models/mamnet.py:79`) and a plain logit tensor
+    is True (`mamnet/models/mamnet.py:79`) and a plain logit tensor
     otherwise. `model.train()` would silently change the return type.
   * Dropout — MAMNet's AuxiliaryModule carries p=0.3 — would become active,
     making the adaptation stochastic. The arm F spec requires eval mode apart

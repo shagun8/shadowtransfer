@@ -103,7 +103,7 @@ def main():
         "runs": [row.get(k) for row in per_city
                 for k in ("loco_run_id", "upper_run_id", "expa_run_id") if row.get(k)],
         "generated_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "script": "python/arme_part2_aggregate.py",
+        "script": "appendix_h/arme_part2_aggregate.py",
         "git_hash": None, "git_hash_reason": "project root is not a git repository",
         "metric_module_sha256": sha256_file(BASE / "shadowtransfer" / "metrics.py"),
         "recovery_ratio_definition": "R_i = (IoU_expA_i - IoU_LOCO_i) / (IoU_upper_i - IoU_LOCO_i)",

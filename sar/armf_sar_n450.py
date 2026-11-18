@@ -4,7 +4,7 @@ Arm F SAR, re-run on the n450 MAMNet standard (vanilla) LOCO checkpoints.
 
 IDENTICAL HARNESS, ONE THING CHANGED
 ------------------------------------
-`python/armf_sar_grid.py` ran the published nine-cell SAR grid. This driver
+`support/armf_sar_grid.py` ran the published nine-cell SAR grid. This driver
 runs the SAME two passes (unadapted, then SAR at the stage-1 selected
 configuration) through the SAME pass module, `shadowtransfer/armf_sar_pass.py`,
 on the SAME 150 held-out-city test images in the fixed released order, at batch
@@ -18,7 +18,7 @@ armf_sar_grid.py is NOT edited. It produced published numbers and stays frozen
 step count come from the same stage-1 `selected_config.json`, byte-for-byte.
 
 Output goes to a NEW directory with the `-n450` suffix, under /scratch
-(/projects is archive-only, 2026-09-01). The published
+(the archive root is archive-only, 2026-09-01). The published
 `runs/armF_sar_mamnet_*_highres/` directories are never opened for writing.
 
 THREE THINGS THIS ADDS, none of which change a pass
@@ -516,9 +516,9 @@ def main():
                    "config_sha256": sha256_file(cfg_path),
                    "legacy_run_dir": cell_dir.name,
                    "n450_run_json": str(run_json),
-                   "grid_module_sha256": sha256_file(BASE / "python/armf_sar_grid.py"),
+                   "grid_module_sha256": sha256_file(BASE / "support/armf_sar_grid.py"),
                    "naming_patch_module_sha256": sha256_file(
-                       BASE / "python/armf_sar_naming_patch.py"),
+                       BASE / "support/armf_sar_naming_patch.py"),
                    "test_list_order": ("armc_train.city_split_files(city, "
                                        "res_dir, 'test') -- the fixed released "
                                        "order")}),

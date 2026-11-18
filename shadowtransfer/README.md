@@ -43,3 +43,22 @@ this layout because `shadowtransfer/` sits at the repository root next to
 The four infrastructure modules are specific to the cluster the paper's runs
 were produced on. They are released so the submit wrappers are complete and
 auditable, not because they are needed to reproduce a number.
+
+## Module shas and the layout adaptation
+
+**`metrics.py` is byte-identical to the module the paper's runs used**, sha256
+`730ad4a5bc039e3151599fb86bd411e2816c0897b68f1e4c17729335ab8a6e83`. Three
+analysis scripts hard-check it — `analysis/07_sib_mechanism.py`,
+`analysis/10_seo_selective_prediction.py` and
+`analysis/gj_analysis/gj_blob_miss.py` — and abort on a mismatch. Do not edit
+it, not even a comment: a one-character change breaks all three.
+
+Other modules in this directory were edited for the release layout. The source
+tree is one flat `python/` directory, so a driver that recorded
+`python/shadowtransfer/metrics.py` or resolved `BASE/"python"/...` had to be
+repointed at this layout. Those edits mean **a module's sha256 computed from
+this repository will not equal the sha256 recorded in a published run's
+`run.json`** for anything except `metrics.py`. The recorded values are correct
+for the runs; the difference is the path rewrite, not a change in behaviour.
+Where a provenance string names a file this repository does not ship, it keeps
+its original `python/...` spelling, which is the cluster-side path.

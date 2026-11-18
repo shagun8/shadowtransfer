@@ -170,7 +170,7 @@ def main():
                 "pre-rename keys miou_tol2_final and miou_tol2_step0; left "
                 "byte-identical, see the renamed map above",
             ]),
-            ("edited_by", "python/armf_sar_naming_patch.py"),
+            ("edited_by", "support/armf_sar_naming_patch.py"),
         ])
 
         deriv_un = OrderedDict([

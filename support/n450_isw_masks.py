@@ -8,7 +8,7 @@ built from the fold's full source train split: metadata num_images_used 900.
 OGLANet's and DINOv3's published masks record 450 (their computes route
 through get_dataloaders' seed-42 sampler) and are not touched.
 
-THE PUBLISHED COMPUTE IS NOT EDITED. python/mamnet/compute_isw_masks.py's
+THE PUBLISHED COMPUTE IS NOT EDITED. mamnet/compute_isw_masks.py's
 precompute_masks(args) is imported and called with the published settings
 (read from the published metadata.json: layers feat1,feat2,feat3, kmeans_k 3,
 kmeans_m 1, use_contrast true, img_size 384, mode loco, checkpoint null =
@@ -113,7 +113,7 @@ def main():
                       "note": "published run seeded nothing"},
             "fraction_selected": {k: v.get("fraction_selected")
                                   for k, v in meta.get("masks", {}).items()},
-            "compute": "python/mamnet/compute_isw_masks.py precompute_masks, unedited",
+            "compute": "mamnet/compute_isw_masks.py precompute_masks, unedited",
             "slurm_job_id": os.environ.get("SLURM_JOB_ID"),
             "wall_s": time.time() - t0, "problems": bad}
     for k, fr in prov["fraction_selected"].items():

@@ -168,7 +168,7 @@ def main():
     if method == "isw":
         # Operator ruling 2026-10-26 (decision 2): the published MAMNet ISW
         # masks were built from 900 images; use masks rebuilt from the shared
-        # 450-image list (python/n450_isw_masks.py). Refuse without them.
+        # 450-image list (support/n450_isw_masks.py). Refuse without them.
         import n450_isw_masks as ISWM
         md = ISWM.out_dir(city)
         with open(os.path.join(md, "n450_provenance.json")) as f:
@@ -304,7 +304,7 @@ def main():
         ckpt_path = os.path.join(trainer.output_dir, "checkpoint_best.pth")
         timebox.phase("inference: run_inference_probs.py (published prob writer)")
         tree_out = os.path.join(ckpt_root, "probs_tree")
-        cmd = [PY, "-u", os.path.join(BASE, "python/run_inference_probs.py"),
+        cmd = [PY, "-u", os.path.join(BASE, "run_inference_probs.py"),
                "--model_type", arch, "--model_variant", cell["prob_variant"],
                "--test_type", "loco", "--city", city, "--train_res", R.RES_DIR,
                "--test_res", R.RES_DIR, "--checkpoint_path", ckpt_path,
@@ -321,7 +321,7 @@ def main():
                        timeout=max(60, a.post_timeout - 300))
         probs_dir = os.path.join(tree_out, "loco", city, R.RES_DIR, arch,
                                  cell["prob_variant"])
-        infer = {"writer": "python/run_inference_probs.py", "cmd": cmd,
+        infer = {"writer": "run_inference_probs.py", "cmd": cmd,
                  "precision": "fp32 (no autocast), as the originals' Test_img_probs",
                  "infer_wall_s": time.time() - ti}
     # 2026-10-28 (step 1b) REVERTED, and why.

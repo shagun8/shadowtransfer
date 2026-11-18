@@ -27,3 +27,14 @@ The wrapper's preflight is from our cluster and will not run elsewhere unchanged
 Leave `ST_QUOTA_ALLOC` and `ST_ARCHIVE_ROOT` blank to skip the quota gate and
 the archive-root assertion. The RUN script and worker need only
 `PROJECT_ROOT` and `ST_SCRATCH_ROOT`.
+
+## Added in the second release pass
+
+| File | What it does | Cited by | Camera-ready section |
+|---|---|---|---|
+| `armf_sar_crossearth.py` | SAR applied to the CrossEarth cells | `results/38` (Table 2 incl. CrossEarth SAR) | App. F.24 |
+| `armf_sar_crossearth_submit.sh`, `armf_sar_crossearth_worker.sh` | SUBMIT wrapper and worker | — | App. F.24 |
+
+**SAR writes no checkpoint.** It adapts a parent checkpoint episodically and
+discards the adapted weights, which is why `docs/CHECKPOINT_INVENTORY.json`
+lists no SAR checkpoint and names the parent instead.

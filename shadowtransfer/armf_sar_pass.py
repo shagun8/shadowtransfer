@@ -7,7 +7,7 @@ Every pass in this arm holds normalisation layers in eval mode on their SOURCE
 running statistics and adapts only their affine parameters. `sar.BN_BATCH_STATS`
 is never requested from here. That path is undefined for MAMNet at batch size 1:
 MSCAF's branch 5 pools to 1x1, and `F.batch_norm` refuses batch statistics at
-one value per channel (`python/mamnet/models/mscaf.py:116`, job 20592854). It is
+one value per channel (`mamnet/models/mscaf.py:116`, job 20592854). It is
 architectural, not a wrapper bug, and it is not run.
 
 Holding config A across all three architectures makes the normalisation mode one

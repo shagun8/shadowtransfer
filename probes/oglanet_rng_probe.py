@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Does OGLANet inference depend on the RNG state at inference time?
 
-THE HYPOTHESIS. `DFFM._apply_downsample_n_times` (python/oglanet/models/dffm.py:
+THE HYPOTHESIS. `DFFM._apply_downsample_n_times` (oglanet/models/dffm.py:
 80-85) calls `self.downsample_conv`, which `__init__` defines as a LAMBDA
 FACTORY (dffm.py:34-38) rather than a submodule, so every forward constructs 20
 fresh, randomly-initialised, UNREGISTERED Conv2d+BatchNorm2d layers. They are
@@ -67,7 +67,7 @@ for _d in ("appendix_h", "support", "matched450", "sar", "bsm", "scoring", "prob
     if _p not in sys.path:
         sys.path.insert(0, _p)
 
-METRICS_PY = Path(BASE) / "python/shadowtransfer/metrics.py"
+METRICS_PY = Path(BASE) / "shadowtransfer/metrics.py"
 
 
 def utc():

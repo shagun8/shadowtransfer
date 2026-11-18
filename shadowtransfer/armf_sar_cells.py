@@ -2,7 +2,7 @@
 Arm F SAR close-out — cell resolution, model construction and image loading.
 
 Shared by `python/armf_sar_lr_pilot.py` (stage 1, source-city validation) and
-`python/armf_sar_grid.py` (stage 2, held-out-city test).
+`support/armf_sar_grid.py` (stage 2, held-out-city test).
 
 Lifted from `python/armf_sar_pilot.py`, which stays frozen as the record of the
 2026-07-30 gate session (its reproduction gate was a hard stop; the operator has

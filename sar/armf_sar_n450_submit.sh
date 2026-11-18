@@ -26,7 +26,7 @@ CONTRACT="${PYTHON_DIR}/shadowtransfer/worker_contract.py"
 ST_DISK_GATE="${PYTHON_DIR}/shadowtransfer/disk_gate.py"
 export ST_DISK_GATE
 LEDGER_ARM="F"
-# /scratch only (CLAUDE.md 2026-09-01: /projects is archive-only)
+# /scratch only (CLAUDE.md 2026-09-01: the archive root is archive-only)
 SCRATCH_ROOT="${ST_SCRATCH_ROOT:-${PROJECT_ROOT}}"
 OUT_ROOT="${SCRATCH_ROOT}/runs"
 LOG_PATH="${SCRATCH_ROOT}/logs/armF_sar_n450"

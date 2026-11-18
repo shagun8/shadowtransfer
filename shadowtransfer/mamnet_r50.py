@@ -11,7 +11,7 @@ separates the two at fixed capacity: one CNN, four cells, {supervised, SSL} x
 publishes a self-supervised CNN checkpoint for; ResNet-34 has none.
 
 The published MAMNet is NOT edited. This is a separate model file that mirrors
-`python/mamnet/models/mamnet.py` stage for stage, with the bottleneck channel
+`mamnet/models/mamnet.py` stage for stage, with the bottleneck channel
 widths substituted. The published modules are imported, not copied, so MSCAF,
 CCA, the decoder block and the auxiliary head are bit-identical to the ones that
 produced Tables 30-32 and only their channel arguments differ.
