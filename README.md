@@ -9,6 +9,7 @@ appendices.
 
 - **Dataset:** <https://huggingface.co/datasets/shagunmittal/ShadowTransfer>
   (DOI [10.57967/hf/11483](https://doi.org/10.57967/hf/11483))
+- **Project page:** <https://shagun8.github.io/shadowtransfer/>
 - **Citation:** see [Citation](#citation)
 
 > **Configuration:** all cluster-specific settings resolve from
