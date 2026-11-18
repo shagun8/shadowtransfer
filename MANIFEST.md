@@ -260,3 +260,32 @@ All identifying tokens were removed from the copied code before release. Categor
 - SLURM allocation/account and partition names → replaced with `<SLURM_ACCOUNT>` / `<SLURM_PARTITION>` placeholders.
 - Absolute cluster paths (project / scratch / home trees) → replaced with `<PROJECT_ROOT>` or made relative.
 - **No** wandb entity/project, API/HF tokens, SSH keys, or `--mail-user`/`--mail-type` found.
+
+---
+
+## `analysis/` and `docs/` — camera-ready results producers (added for the camera-ready)
+
+Source: the analysis project that turned prediction dumps into the results JSONs cited by the
+camera-ready. One script per results JSON, named by the JSON's `script` field. Absolute paths were
+replaced by `$PROJECT_ROOT`-relative ones and host names removed; computation is unchanged. The
+per-script inputs and paper elements are in [`analysis/README.md`](analysis/README.md) and
+[`docs/RESULTS_MAP.md`](docs/RESULTS_MAP.md).
+
+| File(s) | Classification |
+|---------|----------------|
+| `analysis/armc_ladder_stats.py`, `analysis/arme_frozen_gap_stats.py` | KEEP → App. H.1, H.3 (recorded in their JSONs as `python/…`) |
+| `analysis/02_seo_loco.py` … `analysis/43_provenance_backfill.py` (39 files) | KEEP → producers of results 02–43 cited by the camera-ready, plus the superseded producers 02, 03, 26–29, 36, 37 whose JSON a cited producer reads |
+| `analysis/_promote_lib.py` | KEEP → shared results-envelope writer (13–15, 19–21, 30) |
+| `analysis/gj_analysis/gj_analysis.py`, `gj_blob_miss.py` | KEEP → results/17 (failure characterisation) |
+| `analysis/fig01/fig01_teaser.py`, `_helpers.py` | KEEP → Figure 1 |
+| `analysis/fig03/fig03_relabel.py` | KEEP → Figure 3 (two relabelled values) |
+| `analysis/fig04/fig04b_profile.py` | KEEP → Figure 4(b) |
+| `analysis/README.md`, `docs/RESULTS_MAP.md` | NEW → documentation |
+| `docs/colors.md` | KEEP → figure colour assignments (was `plots/colors.md`) |
+| `05_internal_pbar.py`, `05a_build_internal_index.py` | EXCLUDE → not cited; nothing released reads results/05 |
+| `08c_probe_sidecar_repairs.py` | EXCLUDE → one-off repair of dump sidecars on the analysis host, not an analysis |
+| `11_internal_sib_worst_case.py`, `12_internal_sib_worst_case_v2.py` | EXCLUDE → superseded by 22, not read by any released producer |
+| `15_armD_appearance_augmentation.py`, `16_armL_recovery_locus.py`, `17_gj_error_taxonomy.py`, `17_gj_failure_panels.py`, `18_gj_error_axes.py`, `18b_gj_category_table.py`, `gj_analysis/gj_width_bins.py`, `gj_analysis/gj_figure_support_dinov3.py` | EXCLUDE → figures not used in the camera-ready |
+| `gj_fill_pass.py`, `gj_inspect_inputs.py`, `gj_iou_mismatch_*.py`, `gj_threshold_diagnostic.py` | EXCLUDE → one-off diagnostics; no results JSON names them |
+| `fig01/orig_fig1_*.py`, `fig01/_glyph_src.py`, `fig04/orig_fig4_right.ipynb` | EXCLUDE → copies of the submitted-version figure code kept as provenance |
+| `_cache/`, `_inv/`, `out/`, `*.parquet`, `results/`, `plots/*.png`, `fig04/fig4_sib.png` | EXCLUDE → data and outputs |

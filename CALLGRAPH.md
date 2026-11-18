@@ -134,3 +134,44 @@ split_diagnostics_submit.sh        → split_diagnostics.sh        → split_dia
 feature_diagnostics_submit.sh      → feature_diagnostics.sh      → feature_diagnostics.py          (App. D)
 select_figure2_tiles_submit.sh     → select_figure2_tiles.sh     → select_figure2_tiles.py         (Figure 2)
 ```
+
+---
+
+## analysis/ — results producers (camera-ready)
+Plain python, run as `python analysis/<script>.py [--dry-run]` after `source .env`; no SLURM
+wrapper (CPU, minutes). Arrows: `A ⇒ B` = B imports A with `importlib`; `[NN]` = reads
+`results/NN_*.json`. Inputs and paper elements per script: [`analysis/README.md`](analysis/README.md).
+```
+dumps/armC/st ─────────────→ armc_ladder_stats.py ─→ [01]
+dumps/st (dinov3frozen) ───→ arme_frozen_gap_stats.py ─→ [02_frozen]           (reads [01])
+
+S-EO (dumps/seo, delta_dumps)
+  02_seo_loco.py → [02]   03_seo_methods.py → [03]
+  04_seo_probspace.py → [04]                 (shadowtransfer/metrics.py; reads [02])
+  07_sib_mechanism.py → [07]                 (metrics.py, armf_crossearth_cells.py; reads [03])
+  08_seo_full_grid.py → [08]                 (reads [02],[03])
+  04, 08 ⇒ 08b_seo_pbar.py → appends to [08]
+  08, 08b ⇒ 09_seo_diagnostics.py → [09]
+  08 ⇒ 10_seo_selective_prediction.py → [10] (reads [06],[08],[09])
+  08 ⇒ 34_seo_sib_family_tgtfda.py → [34]    (reads [08],[30])
+
+Internal benchmark
+  06_aurc_recovery.py → [06]                 (metrics.py)
+  _promote_lib ⇒ 13, 14, 15_…_results, 19, 20, 21, 30 → [13] [14] [15] [19] [20] [21] [30]
+  16_armL_ssl_regime.py → [16]  ⇒ 16_armL_g2_expA.py → 16_armL_g2_expA.md
+  gj_analysis/gj_analysis.py → [17]  → gj_analysis/gj_blob_miss.py → [17_ext]
+  22 → [22] → 25 → [25] → 26 → [26] → 27 → [27] ─┬→ 31_internal_sib_worst_case_tgtfda.py → [31]
+                                                 └ 27 ⇒ 28 → [28] → 29 → [29]
+  31 ⇒ 32_method_comparison_profile_tgtfda.py → [32] → 33_m11_holm_tgtfda.py → [33]
+  23_frozen_backbone_decoder_retrain.py → [23]       24_inria_crosstask.py → [24]
+
+Table 2 / Figure 1 (K=2)
+  31 ⇒ 35_table2_final.py → [35] ⇒ 36 → [36], 37 → [37], 41_figure1_ci.py → [41]
+  31, 35 ⇒ 38_table2_final_v2.py → [38] ⇒ 39 → [39] (reads [36]), 40 → [40] (reads [37])
+  31 ⇒ 42_sib_ablations_k2.py → [42]       31 ⇒ 43_provenance_backfill.py → [43]
+
+Figures
+  [35] + [41] → fig01/fig01_teaser.py (+ _helpers.py) → Figure 1
+  [06] + [43] → fig03/fig03_relabel.py → Figure 3 labels
+  [32]        → fig04/fig04b_profile.py → Figure 4(b)
+```
