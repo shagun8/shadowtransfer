@@ -9,8 +9,8 @@ names its producer in its `script` field, and this table maps them. Columns:
 - **producer** — the script in this repo that writes the JSON (`analysis/`). Where the JSON's
   `script` field names a path that differs from the repo path, the recorded path is given too.
 - **inputs** — what the producer reads, as `Delta-side writer → layout under $PROJECT_ROOT`.
-  Delta-side writers are named by the filename recorded in the run logs; their repository paths
-  are filled in when this branch is rebased on `camera-ready-delta` (marked *(Delta path TBD)*).
+  Writers are given by their repository path. A writer marked *(not released)* is named by the
+  filename recorded in the run logs and is not in this repository; see [Not released](#not-released).
   Upstream results JSONs that a producer reads are listed as `results/NN`.
 
 The layouts are described in [`analysis/README.md`](../analysis/README.md#input-layout). The
@@ -21,38 +21,38 @@ of the camera-ready LaTeX for the values it reports; no number is restated here.
 
 | results id | paper element (camera-ready) | producer | inputs (Delta-side writer → layout) |
 |---|---|---|---|
-| `01_scaling_ladder` | App. H.1 training-set scale ladder (225/450/900) | `analysis/armc_ladder_stats.py` (recorded as `python/armc_ladder_stats.py`) | `armc_train.py` + `armc_dump.py` *(Delta path TBD)* → `dumps/armC/st/<run_id>/{perimage.parquet,run.json}` |
-| `02_frozen_backbone_gap` | App. H.3 frozen DINOv3 encoder (gap) | `analysis/arme_frozen_gap_stats.py` (recorded as `python/arme_frozen_gap_stats.py`) | `arme_part1_train.py` + `arme_part1_dump.py` *(Delta path TBD)* → `dumps/st/dinov3frozen-*-r450-*-hr-s0/`; `results/01` |
-| `04_seo_probspace` | §4.5, App. I (p̄_S / p̄_B on S-EO, MAMNet + DINOv3) | `analysis/04_seo_probspace.py` | `armA_phase3_train.py` *(Delta path TBD)* → `dumps/seo/<run_id>/{perimage.parquet,run.json,probs.npz}`; metric module `shadowtransfer/metrics.py`; `results/02_seo_loco` |
-| `06_aurc_recovery` | §4.3 Figure 3(a) ΔAURC label; App. G.5 | `analysis/06_aurc_recovery.py` | `armc_r450.py` (CPU re-pass of published probability maps) *(Delta path TBD)* → `dumps/st_r450_published_recompute/`; `data/figure3_data/`, `data/Final_data_test/`; metric module |
-| `07_sib_mechanism` | App. I "Decomposition of SIB's S-EO deficit" | `analysis/07_sib_mechanism.py` | `armA_phase3_train.py` → `dumps/seo/`; `armc_r450.py` → `dumps/st_r450_published_recompute/`; `logs/armA_phase3_manifest.json`; `data/data_comparisons/SEO/`; `shadowtransfer/armf_crossearth_cells.py` (FDA op); `results/03` |
-| `08_seo_full_grid` | §4.5, App. I (S-EO vanilla grid, 4 archs × 3 cities × 3 seeds; method grid) | `analysis/08_seo_full_grid.py` | `armA_phase3_train.py`, `armA_b5_sar_probe.py` *(Delta path TBD)* → `delta_dumps/<tree>/<run_id>/`, `delta_logs/armA_b4_probe_inventory_final.json`, `delta_logs/armA_b5_t2_roster.json`; `results/02_seo_loco`, `results/03` |
+| `01_scaling_ladder` | App. H.1 training-set scale ladder (225/450/900) | `analysis/armc_ladder_stats.py` (recorded as `python/armc_ladder_stats.py`) | `appendix_h/armc_train.py` + `shadowtransfer/armc_dump.py` → `dumps/armC/st/<run_id>/{perimage.parquet,run.json}` |
+| `02_frozen_backbone_gap` | App. H.3 frozen DINOv3 encoder (gap) | `analysis/arme_frozen_gap_stats.py` (recorded as `python/arme_frozen_gap_stats.py`) | `appendix_h/arme_part1_train.py` + `shadowtransfer/arme_part1_dump.py` → `dumps/st/dinov3frozen-*-r450-*-hr-s0/`; `results/01` |
+| `04_seo_probspace` | §4.5, App. I (p̄_S / p̄_B on S-EO, MAMNet + DINOv3) | `analysis/04_seo_probspace.py` | `armA_phase3_train.py` *(not released)* → `dumps/seo/<run_id>/{perimage.parquet,run.json,probs.npz}`; metric module `shadowtransfer/metrics.py`; `results/02_seo_loco` |
+| `06_aurc_recovery` | §4.3 Figure 3(a) ΔAURC label; App. G.5 | `analysis/06_aurc_recovery.py` | `appendix_h/armc_r450.py` (CPU re-pass of published probability maps) → `dumps/st_r450_published_recompute/`; `data/figure3_data/`, `data/Final_data_test/`; metric module |
+| `07_sib_mechanism` | App. I "Decomposition of SIB's S-EO deficit" | `analysis/07_sib_mechanism.py` | `armA_phase3_train.py` *(not released)* → `dumps/seo/`; `appendix_h/armc_r450.py` → `dumps/st_r450_published_recompute/`; `logs/armA_phase3_manifest.json`; `data/data_comparisons/SEO/`; `shadowtransfer/armf_crossearth_cells.py` (FDA op); `results/03` |
+| `08_seo_full_grid` | §4.5, App. I (S-EO vanilla grid, 4 archs × 3 cities × 3 seeds; method grid) | `analysis/08_seo_full_grid.py` | `armA_phase3_train.py`, `armA_b5_sar_probe.py` *(not released)* → `delta_dumps/<tree>/<run_id>/`, `delta_logs/armA_b4_probe_inventory_final.json`, `delta_logs/armA_b5_t2_roster.json`; `results/02_seo_loco`, `results/03` |
 | `08_seo_full_grid` (append) | App. I p̄_S over 12 pairs | `analysis/08b_seo_pbar.py` (appends a block to results/08) | as 08, plus `probs.npz`; imports `04_seo_probspace.py` and `08_seo_full_grid.py` |
 | `09_seo_diagnostics` | App. I (failure-to-train / collapse / Exp A on S-EO) | `analysis/09_seo_diagnostics.py` | `delta_dumps/`; imports 08 and 08b; `results/08` |
 | `10_seo_selective_prediction` | App. I selective-prediction gap on S-EO | `analysis/10_seo_selective_prediction.py` | `delta_dumps/` (coverage grid); imports 08; `results/06`, `results/08`, `results/09` |
-| `13_armF_internal_crossearth_bsm_sar` | Table 2 CrossEarth / BSM / SAR rows (§3.4); App. F.22–F.24 | `analysis/13_armF_internal_crossearth_bsm_sar.py` | `armf_crossearth_train.py`, `armf_bsm_train.py`, `armf_sar_grid.py` *(Delta path TBD)* → `runs/armF_*/results.json`, `delta_runs/dffm_defect/provenance.json` |
+| `13_armF_internal_crossearth_bsm_sar` | Table 2 CrossEarth / BSM / SAR rows (§3.4); App. F.22–F.24 | `analysis/13_armF_internal_crossearth_bsm_sar.py` | `crossearth/armf_crossearth_train.py`, `bsm/armf_bsm_train.py`, SAR passes `shadowtransfer/armf_sar_pass.py` + `shadowtransfer/sar.py` (stage-1 config `support/armf_sar_grid.py`) → `runs/armF_*/results.json`, `delta_runs/dffm_defect/provenance.json` |
 | `14_appE_empty_foreground_rate` | App. E (empty-foreground rate, 117 of 900 at K=2) | `analysis/14_appE_empty_foreground_rate.py` | `runs/D_seedfloor/seed_floor.md`, `summaries/empty_denominator_rate.md` (promotion of a Delta audit) |
-| `15_armD_appearance_augmentation` | App. H.2 appearance augmentation | `analysis/15_armD_appearance_augmentation_results.py` | `armd_train.py`, `armd_e200.py`, `armd_diag_aggregate.py` *(Delta path TBD)* → `runs/D_S3/*.json`, `runs/D_R/correlation.json`, `runs/D_seedfloor/results.json` |
-| `16_armL_ssl_regime` | App. H.4 pretraining / fine-tuning regime (Exp B) | `analysis/16_armL_ssl_regime.py` | `armL_train.py` + probes *(Delta path TBD)* → `dumps/st/mamnetr50-*-r450-*-hr-s*[-probes]/`; `results/02_frozen_backbone_gap` |
+| `15_armD_appearance_augmentation` | App. H.2 appearance augmentation | `analysis/15_armD_appearance_augmentation_results.py` | `appendix_h/armd_train.py` (+ `shadowtransfer/armd_aug.py`, `armd_s3.py`); `armd_e200.py`, `armd_diag_aggregate.py` *(not released)* → `runs/D_S3/*.json`, `runs/D_R/correlation.json`, `runs/D_seedfloor/results.json` |
+| `16_armL_ssl_regime` | App. H.4 pretraining / fine-tuning regime (Exp B) | `analysis/16_armL_ssl_regime.py` | `appendix_h/armL_train.py`, `appendix_h/armL_results.py` (probe ops in `shadowtransfer/armc_probes_ops.py`) → `dumps/st/mamnetr50-*-r450-*-hr-s*[-probes]/`; `results/02_frozen_backbone_gap` |
 | `16_armL_g2_expA` (Markdown) | App. H.4 Exp A 2×2 | `analysis/16_armL_g2_expA.py` (writes `results/16_armL_g2_expA.md`) | as 16; imports `16_armL_ssl_regime.py` |
-| `19_e12_seed_table` | App. K (MAMNet-SIB cells are the E-12 FDA-recipe retrains) | `analysis/19_e12_seed_table.py` | E-12 retrain driver *(Delta path TBD)* → `delta_dumps/dumps/e12/<run_id>/` |
-| `20_histogram_matching_counts` | §4.2, App. G.3; App. I appearance paragraph | `analysis/20_histogram_matching_counts.py` | `armc_probes.py` *(Delta path TBD)* → `logs/armC_probes_manifest.json`; `results/08`, `results/16_armL_ssl_regime` |
+| `19_e12_seed_table` | App. K (MAMNet-SIB cells are the E-12 FDA-recipe retrains) | `analysis/19_e12_seed_table.py` | E-12 retrain driver *(not released)* → `delta_dumps/dumps/e12/<run_id>/` |
+| `20_histogram_matching_counts` | §4.2, App. G.3; App. I appearance paragraph | `analysis/20_histogram_matching_counts.py` | `armc_probes.py` driver *(not released)* (its ops: `shadowtransfer/armc_probes_common.py`, `armc_probes_ops.py`) → `logs/armC_probes_manifest.json`; `results/08`, `results/16_armL_ssl_regime` |
 | `21_disclosure_record` | App. F.8 DFFM reimplementation defect; App. G.1 cell provenance | `analysis/21_disclosure_record.py` | Delta audits → `delta_runs/{dffm_defect,oglanet_nondeterminism,retrained_cells_record,train_count_audit*,mrfp_rerun_audit,test_results_metric_variant_audit}/` |
-| `22_internal_sib_worst_case_v3` | App. K (published-budget adjudication; input to 25, 26, 31) | `analysis/22_internal_sib_worst_case_v3.py` | `armB_png_score.py` *(Delta path TBD)* → `dumps/st_r450_published_png/`; `dumps/st/` (CrossEarth, BSM); `delta_dumps/dumps/e12/`; `delta_runs/*` |
-| `23_frozen_backbone_decoder_retrain` | App. H.3 frozen DINOv3 encoder (decoder retrain, R) | `analysis/23_frozen_backbone_decoder_retrain.py` | `arme_part2_train.py` *(Delta path TBD)* → `delta_runs/arme_part1/`, `delta_runs/arme_part2/`, `delta_runs/arme_part2_revised/` `results.json`; `results/02_frozen_backbone_gap` |
-| `24_inria_crosstask` | App. G.7 INRIA cross-task replication | `analysis/24_inria_crosstask.py` | `run_inference_probs_inria.py` + the §4.3 battery → `data/figure3_data/inria_sp_battery_results.json`; `results/06` |
-| `25_matched450_retrain_record` | App. G.1 cell provenance (450-image retrains); App. K | `analysis/25_matched450_retrain_record.py` | `n450_train.py` + `n450_score.py` *(Delta path TBD)* → `dumps/st_r450_published_recompute/*-s42-n450[-bs4]/`; `dumps/st_r450_published_png/`; `results/01`, `results/21`, `results/22` |
-| `30_oglanet_rng_dependence` | App. F.8 / App. G.1 OGLANet inference nondeterminism | `analysis/30_oglanet_rng_dependence.py` | `oglanet_rng_probe_report.py` *(Delta path TBD)* → `delta_runs/oglanet_rng_probe/`; `results/21`, `results/27` |
-| `31_internal_sib_worst_case_tgtfda` | §5 Results "Gap to the upper bound"; App. K table | `analysis/31_internal_sib_worst_case_tgtfda.py` | as 22 plus `n450_tgtfda.py` → `dumps/st_r450_published_recompute/oglanet-sibc4tgt-loco-r450-*-hr-s42-n450/`, `delta_runs/armF_sar_mamnet_*_highres-n450/`; `results/22`, `results/26`, `results/27` |
+| `22_internal_sib_worst_case_v3` | App. K (published-budget adjudication; input to 25, 26, 31) | `analysis/22_internal_sib_worst_case_v3.py` | `scoring/armB_png_score.py` → `dumps/st_r450_published_png/`; `dumps/st/` (CrossEarth, BSM); `delta_dumps/dumps/e12/`; `delta_runs/*` |
+| `23_frozen_backbone_decoder_retrain` | App. H.3 frozen DINOv3 encoder (decoder retrain, R) | `analysis/23_frozen_backbone_decoder_retrain.py` | `arme_part2_train.py` *(not released)*, aggregated by `appendix_h/arme_part2_aggregate.py` and `appendix_h/arme_part2_revised_aggregate.py` → `delta_runs/arme_part1/`, `delta_runs/arme_part2/`, `delta_runs/arme_part2_revised/` `results.json`; `results/02_frozen_backbone_gap` |
+| `24_inria_crosstask` | App. G.7 INRIA cross-task replication | `analysis/24_inria_crosstask.py` | `run_inference_probs_inria.py` (+ `mamnet/train_inria.py`) and the §4.3 battery → `data/figure3_data/inria_sp_battery_results.json`; `results/06` |
+| `25_matched450_retrain_record` | App. G.1 cell provenance (450-image retrains); App. K | `analysis/25_matched450_retrain_record.py` | `matched450/n450_train.py` + `matched450/n450_score.py` → `dumps/st_r450_published_recompute/*-s42-n450[-bs4]/`; `dumps/st_r450_published_png/`; `results/01`, `results/21`, `results/22` |
+| `30_oglanet_rng_dependence` | App. F.8 / App. G.1 OGLANet inference nondeterminism | `analysis/30_oglanet_rng_dependence.py` | `probes/oglanet_rng_probe.py` + `probes/oglanet_rng_probe_report.py` → `delta_runs/oglanet_rng_probe/`; `results/21`, `results/27` |
+| `31_internal_sib_worst_case_tgtfda` | §5 Results "Gap to the upper bound"; App. K table | `analysis/31_internal_sib_worst_case_tgtfda.py` | as 22 plus `n450_tgtfda.py` *(not released)* → `dumps/st_r450_published_recompute/oglanet-sibc4tgt-loco-r450-*-hr-s42-n450/`, `delta_runs/armF_sar_mamnet_*_highres-n450/` (`sar/armf_sar_n450.py`); `results/22`, `results/26`, `results/27` |
 | `32_method_comparison_profile_tgtfda` | App. K method profile; Figure 4(b) | `analysis/32_method_comparison_profile_tgtfda.py` | imports `31_internal_sib_worst_case_tgtfda.py` (row builder); `results/28` |
 | `33_m11_holm_tgtfda` | App. K (M11 Holm family) | `analysis/33_m11_holm_tgtfda.py` | `results/32`, `results/29` |
-| `34_seo_sib_family_tgtfda` | App. I (SIB on S-EO, held-out-city FDA pool) | `analysis/34_seo_sib_family_tgtfda.py` | `armA_phase3_train.py` (tgtfda cells) → `dumps/seo/oglanet-sib-loco-r3500-*-hr-s0-tgtfda/`; imports `08_seo_full_grid.py`; `results/08`, `results/30` |
-| `35_table2_final` | Table 2 at K=2 (§3.4); Figure 1 chart values (`figure1_data`) | `analysis/35_table2_final.py` | `dumps/st_r450_published_png/`, `dumps/st_r450_published_recompute/`, `dumps/st/`, `delta_runs/midres_png_score/`; `data/model_results/statistical_results.csv`; camera-ready LaTeX via `git show` (see README); imports 31; `results/01` |
+| `34_seo_sib_family_tgtfda` | App. I (SIB on S-EO, held-out-city FDA pool) | `analysis/34_seo_sib_family_tgtfda.py` | `armA_phase3_train.py` (tgtfda cells) *(not released)* → `dumps/seo/oglanet-sib-loco-r3500-*-hr-s0-tgtfda/`; imports `08_seo_full_grid.py`; `results/08`, `results/30` |
+| `35_table2_final` | Table 2 at K=2 (§3.4); Figure 1 chart values (`figure1_data`) | `analysis/35_table2_final.py` | `dumps/st_r450_published_png/`, `dumps/st_r450_published_recompute/`, `dumps/st/`, `delta_runs/midres_png_score/` (mid-res PNG scoring run *(not released)*); `data/model_results/statistical_results.csv`; camera-ready LaTeX via `git show` (see README); imports 31; `results/01` |
 | `38_table2_final_v2` | Table 2 at K=2 incl. CrossEarth SAR (§3.4) | `analysis/38_table2_final_v2.py` | as 35 plus `delta_runs/armF_sar_crossearth_*`; imports 31 and 35 |
 | `39_table2_vs_vanilla_v2` | §3.4 methods vs Vanilla; App. G.2 pooled summaries | `analysis/39_table2_vs_vanilla_v2.py` | imports 38; `results/36`, `results/38` |
 | `40_loco_all_cells_v2` | App. G.1 per-cell tables, App. G.2 pooled summaries | `analysis/40_loco_all_cells_v2.py` | imports 38; `results/37`, `results/38` |
 | `41_figure1_ci` | Figure 1 error bars (95% CIs) | `analysis/41_figure1_ci.py` | imports 35; `results/35`, `results/38` |
-| `42_sib_ablations_k2` | App. L SIB component ablations at K=2 | `analysis/42_sib_ablations_k2.py` | SIB ablation chain → `dumps/st_sib_ablation_png/`, `delta_runs/sib_ablation_k2/`; `handoff/appendixJ_printed_values.json`; imports 31; `results/41` |
+| `42_sib_ablations_k2` | App. L SIB component ablations at K=2 | `analysis/42_sib_ablations_k2.py` | SIB ablation K=2 scoring chain *(not released)* → `dumps/st_sib_ablation_png/`, `delta_runs/sib_ablation_k2/`; `handoff/appendixJ_printed_values.json`; imports 31; `results/41` |
 | `43_provenance_backfill` | App. J SIB implementation (hyperparameter provenance); Figure 3 "~24×" label | `analysis/43_provenance_backfill.py` | `dumps/st*`, `delta_dumps/dumps/e12/`, `data/figure3_data/`, run logs; imports 31 |
 
 ## Read by a cited producer (superseded or upstream; shipped so the chain runs)
@@ -77,6 +77,8 @@ of the camera-ready LaTeX for the values it reports; no number is restated here.
 
 ## Not released
 
+Results producers not in this repository:
+
 | results id | reason |
 |---|---|
 | `05_internal_pbar` | not cited in the camera-ready (the printed p̄_S figures are S-EO, from 04/08b) and no released producer reads it |
@@ -95,3 +97,20 @@ Figure 2 (qualitative) is produced by `select_figure2_tiles.py` at the repo root
 read a results JSON. The dataset figures (annotation pipeline, per-city statistics) are not
 generated from results JSONs. Colour assignments shared by the figures are in
 [`docs/colors.md`](colors.md).
+
+### Input writers not in this repository
+
+These Delta-side scripts wrote inputs that released producers read. They were not part of the
+camera-ready Delta release (`MANIFEST.md`, "Camera-ready additions"), so the affected rows above
+cannot be regenerated from this repository alone:
+
+| writer (filename in the run logs) | writes | read by |
+|---|---|---|
+| `armA_phase3_train.py`, `armA_b5_sar_probe.py` (and the `seo_*` modules they import) | S-EO dumps `dumps/seo/`, `delta_dumps/` | 02–04, 07–10, 34 (§4.5, App. I) |
+| `n450_tgtfda.py` | OGLANet-SIB held-out-city FDA cells `oglanet-sibc4tgt-*` | 31, 32, 33 (§5, App. K, Fig. 4(b)) |
+| E-12 retrain driver | `delta_dumps/dumps/e12/` | 19, 22, 26, 27, 31, 43 (App. K) |
+| SIB ablation K=2 scoring chain | `dumps/st_sib_ablation_png/`, `delta_runs/sib_ablation_k2/` | 42 (App. L) |
+| mid-res PNG scoring run | `delta_runs/midres_png_score/` | 35, 38 (Table 2 mid-res cells) |
+| `armc_probes.py` driver | `logs/armC_probes_manifest.json` and probe dumps | 20 (§4.2, App. G.3) |
+| `armd_e200.py`, `armd_diag_aggregate.py` | `runs/D_S3/` decision files, `runs/D_R/` | 15 (App. H.2) |
+| `arme_part2_train.py` | `delta_runs/arme_part2*/` | 23 (App. H.3) |

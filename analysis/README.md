@@ -6,8 +6,9 @@ field. This directory holds those scripts. [`docs/RESULTS_MAP.md`](../docs/RESUL
 each JSON to its camera-ready section, table or figure.
 
 The scripts are CPU-only. They read prediction dumps, run outputs and earlier results JSONs; they
-do not train or run inference. The dumps are written by the training/inference code elsewhere in
-this repository (see the *inputs* column of `docs/RESULTS_MAP.md`). Neither the dumps nor the
+do not train or run inference. The dumps are written by the training, inference and scoring code
+elsewhere in this repository (see the *inputs* column of `docs/RESULTS_MAP.md`); eight input
+writers are not released and are listed there. Neither the dumps nor the
 results JSONs are distributed here.
 
 ## Configuration
@@ -15,7 +16,7 @@ results JSONs are distributed here.
 | variable | required | meaning |
 |---|---|---|
 | `PROJECT_ROOT` | yes | root of the data/output tree described in [Input layout](#input-layout). Set it via `.env` (see `.env.example`). |
-| `ST_METRICS_ROOT` | no | directory that contains the `shadowtransfer/` package (the K=2 metric module `shadowtransfer/metrics.py`) and its sibling `mamnet/` (for `mamnet/utils/contrast_utils.py`). Defaults to the repository root. |
+| `ST_METRICS_ROOT` | no | directory that contains the `shadowtransfer/` package (the K=2 metric module [`shadowtransfer/metrics.py`](../shadowtransfer/metrics.py)) and its sibling `mamnet/` (for `mamnet/utils/contrast_utils.py`). Defaults to the repository root, where both ship. |
 | `ST_FORBIDDEN_OUT_PREFIX` | no | `30_oglanet_rng_dependence.py` refuses to write under this prefix. Unset means no guard. |
 
 The metric module is imported, never reimplemented. Several producers check its sha256 before
@@ -47,29 +48,29 @@ All paths are relative to `$PROJECT_ROOT`.
 
 | path | contents | written by |
 |---|---|---|
-| `dumps/<tree>/<run_id>/perimage.parquet` + `run.json` | one row per test image: raw `tp/fp/fn/tn` counts (tolerant and strict), per-image IoU, AURC fields, category pixel counts; `run.json` records the run's config, `config_sha256`, `target_access` and the metric module sha | Delta-side dump writers (below) |
+| `dumps/<tree>/<run_id>/perimage.parquet` + `run.json` | one row per test image: raw `tp/fp/fn/tn` counts (tolerant and strict), per-image IoU, AURC fields, category pixel counts; `run.json` records the run's config, `config_sha256`, `target_access` and the metric module sha | the dump writers (below) |
 | `dumps/<tree>/<run_id>/probs.npz` | per-image probability maps (S-EO and probe cells only) | as above |
 | `dumps/<tree>/INDEX.parquet` | index of a tree, rebuilt after every copy; producers select cells from it, never from a glob | the producer's own index step or the copy step |
-| `delta_dumps/<tree>/…` | the same dump format, for trees copied in bulk (S-EO method grid, E-12 retrains) | Delta-side dump writers |
-| `delta_runs/<audit>/results.json`, `runs/<arm>/…` | small per-run summaries from Delta audits and training arms | Delta-side drivers |
-| `logs/*.json`, `delta_logs/*.json` | manifests and rosters that list which cells exist | Delta-side drivers |
+| `delta_dumps/<tree>/…` | the same dump format, for trees copied in bulk (S-EO method grid, E-12 retrains) | the dump writers (below) |
+| `delta_runs/<audit>/results.json`, `runs/<arm>/…` | small per-run summaries from Delta audits and training arms | the drivers in `appendix_h/`, `crossearth/`, `bsm/`, `sar/`, `matched450/`, `probes/` |
+| `logs/*.json`, `delta_logs/*.json` | manifests and rosters that list which cells exist | the same drivers |
 | `results/NN_<name>.json` | outputs of this directory; also inputs to later producers | this directory |
 | `analysis/_inv/`, `analysis/_cache/`, `analysis/out/` | tree indexes cited by sha256, caches, scratch outputs | this directory |
 | `data/Final_data_test/`, `data/figure3_data/`, `data/model_results/`, `data/data_comparisons/` | dataset tree, submitted-figure data, per-cell CSVs | dataset release and the submission-era scripts |
 | `final_paper/` | a git checkout of the paper's LaTeX source | not distributed; see Limitations |
 
-Dump trees and the Delta-side writer recorded in their run logs (repository paths of the Delta-side
-scripts are filled in from `camera-ready-delta`):
+Dump trees and the scripts that wrote them. A writer marked *(not released)* is named by the
+filename in the run logs and is not in this repository ([`docs/RESULTS_MAP.md`](../docs/RESULTS_MAP.md#input-writers-not-in-this-repository)):
 
-| tree | cells | Delta-side writer |
+| tree | cells | writer |
 |---|---|---|
-| `dumps/armC/st` | arm C scaling ladder (225/450/900) | `armc_train.py`, `armc_dump.py` |
-| `dumps/st` | arm C probes, arm L (MAMNet-R50 SSL regime), arm E (frozen DINOv3), arm F (BSM, CrossEarth) | `armc_probes.py`, `armL_train.py`, `arme_part1_train.py` / `arme_part1_dump.py`, `armf_bsm_train.py`, `armf_crossearth_train.py` |
-| `dumps/st_r450_published_recompute` | CPU re-pass over the published cells' stored probability maps; matched-450 retrains (`*-s42-n450[-bs4]`); OGLANet-SIB held-out-city FDA retrains (`oglanet-sibc4tgt-*`) | `armc_r450.py`; `n450_train.py` + `n450_score.py`; `n450_tgtfda.py` |
-| `dumps/st_r450_published_png` | published cells scored from their saved prediction PNGs | `armB_png_score.py` |
-| `dumps/st_sib_ablation_png` | SIB ablation cells scored from PNGs | SIB ablation K=2 chain (`delta_runs/sib_ablation_k2/`) |
-| `dumps/seo`, `delta_dumps/…/seo` | S-EO external benchmark (vanilla grid, method grid, SIB `-tgtfda`) | `armA_phase3_train.py`, `armA_b5_sar_probe.py` |
-| `delta_dumps/dumps/e12` | MAMNet-SIB FDA-recipe retrains (seeds 42–44) | E-12 retrain driver |
+| `dumps/armC/st` | arm C scaling ladder (225/450/900) | `appendix_h/armc_train.py`, `shadowtransfer/armc_dump.py` |
+| `dumps/st` | arm C probes, arm L (MAMNet-R50 SSL regime), arm E (frozen DINOv3), arm F (BSM, CrossEarth) | `armc_probes.py` *(not released)* (ops in `shadowtransfer/armc_probes_*.py`), `appendix_h/armL_train.py`, `appendix_h/arme_part1_train.py` + `shadowtransfer/arme_part1_dump.py`, `bsm/armf_bsm_train.py`, `crossearth/armf_crossearth_train.py` |
+| `dumps/st_r450_published_recompute` | CPU re-pass over the published cells' stored probability maps; matched-450 retrains (`*-s42-n450[-bs4]`); OGLANet-SIB held-out-city FDA retrains (`oglanet-sibc4tgt-*`) | `appendix_h/armc_r450.py`; `matched450/n450_train.py` + `matched450/n450_score.py`; `n450_tgtfda.py` *(not released)* |
+| `dumps/st_r450_published_png` | published cells scored from their saved prediction PNGs | `scoring/armB_png_score.py` |
+| `dumps/st_sib_ablation_png` | SIB ablation cells scored from PNGs | SIB ablation K=2 chain *(not released)* (`delta_runs/sib_ablation_k2/`) |
+| `dumps/seo`, `delta_dumps/…/seo` | S-EO external benchmark (vanilla grid, method grid, SIB `-tgtfda`) | `armA_phase3_train.py`, `armA_b5_sar_probe.py` *(not released)* |
+| `delta_dumps/dumps/e12` | MAMNet-SIB FDA-recipe retrains (seeds 42–44) | E-12 retrain driver *(not released)* |
 
 ## Producers
 
@@ -104,7 +105,7 @@ scripts loaded with `importlib`. "Paper" uses camera-ready numbering.
 | `24_inria_crosstask.py` | `results/24_inria_crosstask.json` | `data/figure3_data/inria_sp_battery_results.json`, `final_paper/` text; `results/06` | — | App. G.7 |
 | `25_matched450_retrain_record.py` | `results/25_…json` | `dumps/st_r450_published_recompute` (`*-n450*`), `dumps/st_r450_published_png`; `results/01`, `21`, `22` | — | App. G.1, App. K |
 | `26_internal_sib_worst_case_n450.py` | `results/26_…json` | as 22 plus n450 cells; `results/22`, `25` | — | superseded by 27 → 31; read by 25, 27, 31 |
-| `27_internal_sib_worst_case_n450_sar.py` | `results/27_…json` | as 26 plus `delta_runs/armF_sar_mamnet_*_highres-n450`; `results/26` | — | superseded by 31; read by 28, 30, 31 |
+| `27_internal_sib_worst_case_n450_sar.py` | `results/27_…json` | as 26 plus `delta_runs/armF_sar_mamnet_*_highres-n450` (written by `sar/armf_sar_n450.py`); `results/26` | — | superseded by 31; read by 28, 30, 31 |
 | `28_method_comparison_profile.py` | `results/28_…json` | `results/22`, `26`, `27` | 27 | superseded by 32; read by 29, 32 |
 | `29_m11_holm.py` | `results/29_m11_holm.json` | `results/28` | — | superseded by 33; read by 33 |
 | `30_oglanet_rng_dependence.py` | `results/30_…json` | `delta_runs/oglanet_rng_probe`; `results/21`, `27` | `_promote_lib` | App. F.8, App. G.1 |
