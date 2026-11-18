@@ -289,3 +289,84 @@ per-script inputs and paper elements are in [`analysis/README.md`](analysis/READ
 | `gj_fill_pass.py`, `gj_inspect_inputs.py`, `gj_iou_mismatch_*.py`, `gj_threshold_diagnostic.py` | EXCLUDE → one-off diagnostics; no results JSON names them |
 | `fig01/orig_fig1_*.py`, `fig01/_glyph_src.py`, `fig04/orig_fig4_right.ipynb` | EXCLUDE → copies of the submitted-version figure code kept as provenance |
 | `_cache/`, `_inv/`, `out/`, `*.parquet`, `results/`, `plots/*.png`, `fig04/fig4_sib.png` | EXCLUDE → data and outputs |
+
+---
+
+# Camera-ready additions
+
+Added for the NeurIPS 2026 camera-ready so that the code behind every reported
+number is released. Source tree: the cluster `python/` tree the paper's runs
+were produced from. Same KEEP / EXCLUDE discipline as the June pass.
+
+## `shadowtransfer/`  → **KEEP** (metric package + shared run-time modules)
+
+31 files. Imported as `shadowtransfer`; `ST_METRICS_ROOT` defaults to the
+repository root. `metrics.py` ships byte-identical at sha256
+`730ad4a5bc039e3151599fb86bd411e2816c0897`, which `analysis/07_sib_mechanism.py`
+and `analysis/gj_analysis/gj_blob_miss.py` both verify before use. Includes the
+CrossEarth / BSM / SAR / matched-450 runtime modules and four cluster
+infrastructure modules (`ledger.py`, `worker_contract.py`, `disk_gate.py`,
+`fortress_recall.py`) released so the submit wrappers are complete. Per-file
+table in `shadowtransfer/README.md`.
+
+## `crossearth/`  → **KEEP** (App. F.22)
+
+4 files. Overlay around upstream VisionXLab/CrossEarth, pinned at
+`644a5a1b3c01b2e5531820b5291d4397597f75de` in `upstream_pin.json`. Upstream is
+**not vendored**; clone instructions and the seven-item deviations table are in
+that file and in the README.
+
+## `sar/`  → **KEEP** (App. F.24)
+
+3 files. SAR test-time adaptation on the matched-450 models. The submit
+wrapper's preflight is site-specific; see `sar/README.md`.
+
+## `bsm/`  → **KEEP** (App. F.23)
+
+1 file. Our BSM reimplementation; no official implementation exists. AdaIN
+style-network weights are downloaded, not committed.
+
+## `matched450/`  → **KEEP** (§3.3, Table 2)
+
+4 files. Matched-450 retrains, their scorer, the gate/manifest logic, and the
+SIB noise cells.
+
+## `appendix_h/`  → **KEEP** (App. H.1–H.4)
+
+8 files. Scale ladder, appearance augmentation, frozen DINOv3, and
+pretraining/fine-tuning regime drivers. The statistics scripts for H.1 and H.3
+are released by the analysis pass under `analysis/`.
+
+## `scoring/`  → **KEEP** (App. E)
+
+1 file. K=2 boundary-tolerant scoring of saved prediction PNGs; the documented
+App. E path. `scoring/README.md` states the K and variant of every other
+evaluator in the repository.
+
+## `probes/`  → **KEEP** (App. F.8)
+
+2 files. OGLANet inference nondeterminism probe and its report.
+
+## `support/`  → **KEEP** (imported by the above)
+
+6 files. Not entry points; released because a released driver imports them.
+
+## EXCLUDED from this pass
+
+| Path | Reason |
+|---|---|
+| checkpoints (`checkpoint_best.pth`, 144 published cells, 58.58 GiB) | inventory only, per the brief; the user decides whether these go to a model repository |
+| prediction dumps (`perimage.parquet`), `Test_img_probs/*.npy` | data, not code; over the size limit |
+| `armA_*` block diagnostics, `armT*` harness probes, `arm[BCEFJ]` variant drivers not behind a camera-ready number | internal scaffolding; listed as ASK in the session record rather than released silently |
+| `arme_frozen_gap_stats.py`, `armc_ladder_stats.py` | released under `analysis/` by the analysis pass |
+| arm-A modules reachable only from unused functions of `support/trainaudit_sar_drift.py` | not camera-ready code; those functions raise `ImportError` in this release, which `support/README.md` states |
+
+## Identity scrubbing (camera-ready pass)
+
+The scrub grep specified in the release brief (cluster allocation and user
+names, absolute filesystem roots, HF and GitHub token prefixes, and the
+document-host identifiers) returns empty on this branch. 42 substitutions were applied across 16 files with
+asserted anchors: cluster roots → `${PROJECT_ROOT}` / `${ST_SCRATCH_ROOT}`,
+SLURM account → `<SLURM_ACCOUNT>`, alternate-cluster blocks genericized, and the
+analysis-host name removed from two comment strings. Five new environment
+variables are documented in `.env.example`.

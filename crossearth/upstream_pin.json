@@ -1,0 +1,24 @@
+{
+  "paper_section": "App. F.22",
+  "upstream": {
+    "name": "CrossEarth",
+    "url": "https://github.com/VisionXLab/CrossEarth",
+    "pinned_commit": "644a5a1b3c01b2e5531820b5291d4397597f75de",
+    "vendored": false,
+    "clone_instructions": "git clone https://github.com/VisionXLab/CrossEarth.git && git -C CrossEarth checkout 644a5a1b3c01b2e5531820b5291d4397597f75de",
+    "note": "Not redistributed. Upstream license headers are retained in the upstream clone; this repository ships only the runtime/driver overlay around it."
+  },
+  "deviations_from_published": [
+    "crop 512 -> 384 (our native patch)",
+    "batch 1 -> 4",
+    "iterations 30000 -> 10000 (~89 epochs at 450 images, our 100-epoch protocol; 30000 projects to 5.3 h and exceeds the 3:59:59 partition ceiling)",
+    "bf16 autocast with mmcv deformable attention forced to fp32 (mmcv 2.1.0 has no bf16 ms_deform_attn_forward_cuda kernel)",
+    "validation is source-city only; the released DG configs put the target domain in the validation dataloader",
+    "test_cfg slide -> whole (image size equals crop size)",
+    "num_classes -> 2"
+  ],
+  "deviation_source": "copied verbatim from armf_crossearth_train.py run_cfg['deviations_from_published'], which is what each run's run.json records",
+  "optimizer": "AdamW(wd=0.05, eps=1e-8, betas=(0.9,0.999)) + PolyLR(power=0.9, end=40000)",
+  "frozen_backbone": true,
+  "defaults": {"crop": 384, "batch_size": 4, "iters": 10000}
+}

@@ -95,3 +95,39 @@ repo-root [`CALLGRAPH.md`](../CALLGRAPH.md) for the full SUBMIT → RUN → pyth
 | `contrast_utils.py` | contrast utilities |
 | `visualization.py` / `visualization_oglanet_isw.py` / `visualization_segdesic.py` | result visualizations |
 | `utils.py` | misc helpers (incl. `config.yaml` loading + `${PROJECT_ROOT}` expansion) |
+
+---
+
+## Camera-ready notes
+
+### DFFM is our reimplementation, and it has a documented defect (App. F.8)
+
+The DFFM block in `models/` is **our reimplementation**, not upstream code. The
+camera-ready reports it with a defect described in App. F.8. It is released
+**exactly as run** and is deliberately **not patched**: the published OGLANet
+numbers were produced by this code, so changing it would make the released code
+stop reproducing the paper. Read App. F.8 before reusing the block.
+
+The reimplementation introduces fresh `BatchNorm` layers that use batch
+statistics at inference. Two consequences:
+
+- **Inference batch size is 4** for the published OGLANet tables
+  (`run_inference_probs.py --batch_size`, default 4). A different batch size
+  changes the numbers.
+- **Inference is not deterministic.** App. F.8 states the observed range across
+  unseeded repeats. The probe behind that statement is `probes/`, which always
+  scores the full 150-image test list for this reason.
+
+### SIB runs switch off adaptive beta and content augmentation (App. J)
+
+`oglanet_sib.sh` now sets `USE_CONTENT_AUG=0` and `ADAPTIVE_BETA=0` explicitly.
+`train_oglanet_sib.py` already defaulted both to `False`, so this is a
+documentation change and not a behaviour change; "off" was previously expressed
+by the flag's absence. Pass `1` only for the App. L ablation cells that vary
+them.
+
+### Scoring
+
+The documented App. E path is `scoring/armB_png_score.py` (two-class
+boundary-tolerant mIoU at K=2). The evaluators in `utils/` are kept because they
+produced published numbers; see `scoring/README.md` for the K each one reports.

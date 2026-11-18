@@ -131,3 +131,21 @@ SUBMIT → RUN → python → modules chain.
 | `contrast_utils.py` | contrast utilities (shared) |
 | `visualization.py` / `visualization_isw.py` / `visualization_segdesic.py` | result visualizations |
 | `utils.py` | misc helpers (incl. `config.yaml` loading + `${PROJECT_ROOT}` expansion) |
+
+---
+
+## Camera-ready notes
+
+### SIB runs switch off adaptive beta and content augmentation (App. J)
+
+`mamnet_sib.sh` now sets `USE_CONTENT_AUG=0` and `ADAPTIVE_BETA=0` explicitly.
+The trainer already defaulted both to `False`, so this is a documentation
+change and not a behaviour change; "off" was previously expressed by the flag's
+absence. Pass `1` only for the App. L ablation cells that vary them.
+
+### Scoring
+
+The documented App. E path is `scoring/armB_png_score.py` (two-class
+boundary-tolerant mIoU at K=2). The evaluators in `utils/` are kept because
+they produced published numbers; see `scoring/README.md` for the K each one
+reports.

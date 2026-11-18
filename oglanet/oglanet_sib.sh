@@ -82,6 +82,13 @@ fi
 # Build SIB component flags from env vars
 # ─────────────────────────────────────────────────────────────────────────────
 SIB_FLAGS=""
+# App. J: the reported SIB runs switch adaptive beta and content augmentation
+# OFF. train_*_sib.py already defaults both to False (argparse store_true), so
+# "off" was previously expressed by absence. Made explicit here; behaviour is
+# unchanged. Pass USE_CONTENT_AUG=1 / ADAPTIVE_BETA=1 only for the App. L
+# ablation cells that vary them.
+: "${USE_CONTENT_AUG:=0}"
+: "${ADAPTIVE_BETA:=0}"
 [ "${USE_HAAR}"              == "1" ] && SIB_FLAGS="${SIB_FLAGS} --use_haar"
 [ "${USE_VIB}"               == "1" ] && SIB_FLAGS="${SIB_FLAGS} --use_vib"
 [ "${USE_CONTENT_AUG}"       == "1" ] && SIB_FLAGS="${SIB_FLAGS} --use_content_aug"
