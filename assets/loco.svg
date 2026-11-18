@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 330" font-family="system-ui,-apple-system,Segoe UI,Helvetica,Arial,sans-serif" role="img" aria-label="Leave-one-city-out protocol: three rotations, each training on two cities and testing on the third, plus a within-city upper bound.">
+<defs><marker id="ar" markerWidth="5" markerHeight="5" refX="4.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#555"/></marker></defs>
+<text x="20" y="28" font-size="15" font-weight="700" fill="#222">Leave-one-city-out (LOCO): three rotations</text>
+<text x="250" y="56" font-size="12" fill="#666" text-anchor="middle">train: 225 + 225 images</text><text x="610" y="56" font-size="12" fill="#666" text-anchor="middle">test: 150 images</text>
+<text x="20" y="95" font-size="13" fill="#333">Hold out Phoenix</text>
+<circle cx="200" cy="90" r="16" fill="#3B5C7A"/><text x="200" y="122" font-size="11" fill="#444" text-anchor="middle">Chicago</text>
+<circle cx="300" cy="90" r="16" fill="#C97A4F"/><text x="300" y="122" font-size="11" fill="#444" text-anchor="middle">Miami</text>
+<line x1="330" y1="90" x2="560" y2="90" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
+<circle cx="610" cy="90" r="16" fill="#fff" stroke="#8B4A3C" stroke-width="4"/><text x="610" y="122" font-size="11" fill="#444" text-anchor="middle">Phoenix</text>
+<text x="20" y="153" font-size="13" fill="#333">Hold out Miami</text>
+<circle cx="200" cy="148" r="16" fill="#3B5C7A"/><text x="200" y="180" font-size="11" fill="#444" text-anchor="middle">Chicago</text>
+<circle cx="300" cy="148" r="16" fill="#8B4A3C"/><text x="300" y="180" font-size="11" fill="#444" text-anchor="middle">Phoenix</text>
+<line x1="330" y1="148" x2="560" y2="148" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
+<circle cx="610" cy="148" r="16" fill="#fff" stroke="#C97A4F" stroke-width="4"/><text x="610" y="180" font-size="11" fill="#444" text-anchor="middle">Miami</text>
+<text x="20" y="211" font-size="13" fill="#333">Hold out Chicago</text>
+<circle cx="200" cy="206" r="16" fill="#C97A4F"/><text x="200" y="238" font-size="11" fill="#444" text-anchor="middle">Miami</text>
+<circle cx="300" cy="206" r="16" fill="#8B4A3C"/><text x="300" y="238" font-size="11" fill="#444" text-anchor="middle">Phoenix</text>
+<line x1="330" y1="206" x2="560" y2="206" stroke="#555" stroke-width="2" marker-end="url(#ar)"/>
+<circle cx="610" cy="206" r="16" fill="#fff" stroke="#3B5C7A" stroke-width="4"/><text x="610" y="238" font-size="11" fill="#444" text-anchor="middle">Chicago</text>
+<line x1="20" y1="254" x2="800" y2="254" stroke="#ddd"/>
+<text x="20" y="281" font-size="13" fill="#333">Within-city upper bound</text>
+<circle cx="250" cy="276" r="16" fill="#777"/><text x="250" y="308" font-size="11" fill="#444" text-anchor="middle">same city, 450 images</text>
+<line x1="330" y1="276" x2="560" y2="276" stroke="#555" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#ar)"/>
+<circle cx="600" cy="276" r="16" fill="#fff" stroke="#777" stroke-width="4"/><text x="600" y="308" font-size="11" fill="#444" text-anchor="middle">same city, 150 images</text>
+<text font-size="12" fill="#555"><tspan x="640" y="262">gap = LOCO minus</tspan><tspan x="640" y="278">upper bound, on the</tspan><tspan x="640" y="294">same 150 test images</tspan></text>
+</svg>

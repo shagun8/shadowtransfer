@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShadowTransfer: A Geographic Transfer Benchmark for Overhead Shadow Detection</title>
+<meta name="description" content="ShadowTransfer: 4,500 human-verified shadow masks across Chicago, Miami and Phoenix at two native NAIP resolutions, with a leave-one-city-out protocol. NeurIPS 2026, Track on Evaluations and Datasets.">
+<meta property="og:title" content="ShadowTransfer: A Geographic Transfer Benchmark for Overhead Shadow Detection">
+<meta property="og:description" content="A benchmark of 4,500 human-verified shadow masks across Chicago, Miami and Phoenix with a leave-one-city-out protocol. NeurIPS 2026, Track on Evaluations and Datasets.">
+<meta property="og:image" content="assets/fig1_teaser.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="venue">NeurIPS 2026 &middot; Track on Evaluations and Datasets</div>
+    <h1>ShadowTransfer<span class="sub">A Geographic Transfer Benchmark for Overhead Shadow Detection</span></h1>
+    <div class="authors">Shagun Mittal &nbsp;&middot;&nbsp; Raymond A. Yeh<sup>*</sup> &nbsp;&middot;&nbsp; Satish Ukkusuri<sup>*</sup></div>
+    <div class="affil">Purdue University</div>
+    <div class="note"><sup>*</sup>Equal senior advising</div>
+    <div class="buttons">
+      <a class="btn" id="paper-link" href="https://openreview.net/forum?id=nsoesUF2ic">Paper (OpenReview)</a>
+      <a class="btn" href="https://huggingface.co/datasets/shagunmittal/ShadowTransfer">Dataset</a>
+      <a class="btn" href="https://github.com/shagun8/shadowtransfer">Code</a>
+      <a class="btn alt" href="https://doi.org/10.57967/hf/11483">DOI 10.57967/hf/11483</a>
+      <a class="btn alt" href="#cite">BibTeX</a>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="wrap">
+  <p class="tldr"><strong>Lay summary.</strong> Maps of where shadows fall in aerial photos help cities measure urban heat, estimate sunlight on surfaces, and outline buildings. The programs that draw these maps are often trained on photos of one city and then used in another, but no one had a standard way to measure the accuracy lost in the move. We built ShadowTransfer, a collection of 4,500 aerial images of Chicago, Miami, and Phoenix in which people traced and checked every shadow. We train on two cities and test on the third. Every program we tested lost accuracy in the new city, the loss persisted with four times more training data, and most existing fixes did worse than standard training. Looking inside, we found the programs grow unsure about shadows while staying confident about everything else. Our public data and tools let anyone check whether a shadow map will hold up in a new city.</p>
+</section>
+
+<div class="wide"><figure>
+  <img src="assets/fig1_teaser.jpg" alt="Paired patches from Chicago, Miami and Phoenix at 0.3 m and 0.6 m with shadow-type overlays, and a chart of within-city versus held-out-city mIoU for four architectures.">
+  <figcaption><strong>Figure 1. Holding out the test city lowers mIoU for all four architectures.</strong> <em>Left:</em> paired test patches from the three cities at 0.3&nbsp;m/px and 0.6&nbsp;m/px; the white box on each 0.6&nbsp;m tile marks the paired 0.3&nbsp;m footprint, and colours mark six shadow types. <em>Right:</em> two-class boundary-tolerant mIoU under vanilla training on the high-resolution cells, averaged over the three rotations. Open marker: within-city upper bound; filled marker: held-out city; &Delta;: mean gap; error bars: 95% CIs.</figcaption>
+</figure></div>
+
+<section class="wrap" id="why">
+  <h2>Shadow detection under geographic shift</h2>
+  <p>Several overhead-imagery pipelines take shadow masks as input. Solar irradiance estimation uses them to separate shaded from sunlit surfaces, urban heat mapping uses them to correct surface temperature readings, and building extraction uses them to resolve occlusion boundaries. These pipelines are routinely trained on imagery from one region and deployed in another.</p>
+  <p>For overhead shadow detection, no benchmark measured what that move costs. AISD, the largest human-verified overhead shadow dataset, contains 514 images and defines no train-test split across cities. S-EO is larger but relies on automatically generated masks and reports no geographic holdout.</p>
+  <table class="cmp">
+    <thead><tr><th>Dataset</th><th>Domain</th><th>Scale</th><th>Human QC</th><th>Cities</th><th>Multi-res</th><th>Transfer protocol</th></tr></thead>
+    <tbody>
+      <tr><td>ISTD</td><td>Ground-level</td><td>1,870</td><td>&#10003;</td><td>&ndash;</td><td>&times;</td><td>&times;</td></tr>
+      <tr><td>AISD</td><td>Aerial 0.3 m</td><td>514</td><td>&#10003;</td><td>5</td><td>&times;</td><td>&times;</td></tr>
+      <tr><td>Airborne-Shadow</td><td>Aerial</td><td>n/r</td><td>&#10003;</td><td>DE only</td><td>&times;</td><td>&times;</td></tr>
+      <tr><td>S-EO</td><td>Satellite 0.3 m</td><td>~19,000</td><td>&times; (auto)</td><td>3 (US)</td><td>&times;</td><td>&times;</td></tr>
+      <tr class="ours"><td>ShadowTransfer</td><td>Aerial 0.3/0.6 m</td><td>4,500</td><td>&#10003;</td><td>3 (US)</td><td>&#10003;</td><td>&#10003; LOCO</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Table 1 of the paper. ISTD is ground-level and included for context only. n/r: not reported.</p>
+</section>
+
+<section class="wrap" id="dataset">
+  <h2>The dataset</h2>
+  <p>ShadowTransfer contains 4,500 RGB patches of 384&times;384 pixels from National Agriculture Imagery Program (NAIP) orthoimagery of Chicago, Miami and Phoenix. Each city contributes 1,500 patches, split evenly across two native NAIP resolutions, 0.3&nbsp;m and 0.6&nbsp;m. We keep both native resolutions because NAIP releases them as separate acquisitions with different sensor characteristics. For each city and resolution, the 750 patches are split into 450 training, 150 validation and 150 test images, and 150 coordinates per city are imaged at both resolutions.</p>
+</section>
+<div class="wide">
+  <div class="gal-ctl"><button class="toggle" id="all-masks" aria-pressed="false">Show all shadow masks</button><span class="note">or click any patch to switch between photo and mask</span></div>
+  <div class="gallery">
+      <div class="city chi"><h4>Chicago</h4>
+        <div class="tile" data-c="chicago" data-r="hr"><img src="assets/gallery/chicago_hr_img.jpg" alt="Chicago, 0.3 m patch" loading="lazy"><span>0.3 m</span></div>
+        <div class="tile" data-c="chicago" data-r="mr"><img src="assets/gallery/chicago_mr_img.jpg" alt="Chicago, 0.6 m patch at the same coordinates" loading="lazy"><span>0.6 m</span></div>
+      </div>
+      <div class="city mia"><h4>Miami</h4>
+        <div class="tile" data-c="miami" data-r="hr"><img src="assets/gallery/miami_hr_img.jpg" alt="Miami, 0.3 m patch" loading="lazy"><span>0.3 m</span></div>
+        <div class="tile" data-c="miami" data-r="mr"><img src="assets/gallery/miami_mr_img.jpg" alt="Miami, 0.6 m patch at the same coordinates" loading="lazy"><span>0.6 m</span></div>
+      </div>
+      <div class="city phx"><h4>Phoenix</h4>
+        <div class="tile" data-c="phoenix" data-r="hr"><img src="assets/gallery/phoenix_hr_img.jpg" alt="Phoenix, 0.3 m patch" loading="lazy"><span>0.3 m</span></div>
+        <div class="tile" data-c="phoenix" data-r="mr"><img src="assets/gallery/phoenix_mr_img.jpg" alt="Phoenix, 0.6 m patch at the same coordinates" loading="lazy"><span>0.6 m</span></div>
+      </div>
+  </div>
+  <div class="legend" style="margin-top:4px">
+    <span><i style="background:rgb(38,128,242)"></i>Building / canyon</span><span><i style="background:rgb(242,82,31)"></i>Under-structure</span><span><i style="background:rgb(26,191,77)"></i>Tree-canopy dapple</span><span><i style="background:rgb(184,31,224)"></i>Topography-cast</span><span><i style="background:rgb(242,199,13)"></i>Vehicle-cast</span><span><i style="background:rgb(13,217,224)"></i>Thin linear</span>
+  </div>
+  <p class="note" style="margin-top:8px">Test-split patches from the Hugging Face release. Each 0.6&nbsp;m patch shares its centre coordinates with the 0.3&nbsp;m patch above it; the white box marks the 0.3&nbsp;m footprint. The benchmark evaluates binary masks (shadow vs. background); the six-way typing is released for downstream analyses.</p>
+</div>
+<section class="wrap">
+  <h3>How the masks were made</h3>
+  <p>Seven trained annotators produced the masks in a three-phase pipeline. Phase&nbsp;1 labels images from scratch with SAM-assisted tools. Phase&nbsp;2 trains an interim shadow detector on Phase&nbsp;1 labels and uses its predictions to seed later batches, which annotators then edit. Phase&nbsp;3 is a retroactive quality-control pass that compares every segment with a final-model prediction and returns disagreements for adjudication. Every 100-image batch includes 5 gold images with frozen reference masks, and Cohen's &kappa; on these images tracks annotator drift (phase-3 mean &kappa; = 0.89).</p>
+</section>
+<div class="wide">
+  <figure><img src="assets/annotation_pipeline.jpg" alt="Three-phase annotation pipeline: SAM-assisted manual labeling, model-in-the-loop acceleration, retroactive quality control." loading="lazy">
+  <figcaption><strong>Masks are produced in three phases, and each phase's output seeds the next.</strong> Agreement statistics and adjudication rules are in Appendix B of the paper.</figcaption></figure>
+  <figure><img src="assets/dataset_stats.jpg" alt="Dataset statistics: sample patches, shadow coverage per city, median blob size by category, shadow-type distribution, and intensity distributions." loading="lazy">
+  <figcaption><strong>The three cities differ in shadow coverage, blob size, type mix and intensity.</strong> (A) sample patches with overlays; (B) shadow coverage per image; (C) median shadow blob size by category; (D) shadow-type mix; (E) mean grayscale intensity. Appendix C of the paper.</figcaption></figure>
+</div>
+
+<section class="wrap" id="benchmark">
+  <h2>The leave-one-city-out benchmark</h2>
+  <p>For each held-out city, we train on the other two cities (225 images each) and test on the held-out city's 150 test images. The within-city upper bound trains on the held-out city's own 450 training images and tests on the same 150 images. Because both models see 450 training images, the gap between them isolates the change of city from training-set size. We score with boundary-tolerant mIoU: the mean of shadow and background IoU, with a &plusmn;2-pixel don't-care band because shadow boundaries are imprecise to annotate.</p>
+  <figure><img src="assets/loco.svg" alt="Diagram of the three leave-one-city-out rotations and the within-city upper bound." loading="lazy"></figure>
+  <p>Under vanilla training, holding out the test city costs 3.5 to 7.8 mIoU across four architectures (MAMNet, OGLANet, DINOv3 and the remote-sensing foundation model CrossEarth). Across all 158 test cells, 157 degrade significantly. Six of eight adaptation methods degrade more than vanilla training on average, and the cost of a method depends on the architecture. ISW costs DINOv3 &minus;18.5 mIoU against &minus;11.1 on OGLANet, while MRFP+ costs OGLANet &minus;14.0 against &minus;4.9 on DINOv3. Without access to the target city, a practitioner has no basis for choosing among them.</p>
+</section>
+
+<section class="wrap" id="alternatives">
+  <h2>Alternative explanations for the gap</h2>
+  <p>We tested four alternative explanations for the gap: training-set scale, appearance statistics, encoder fine-tuning, and the pretraining and fine-tuning regime.</p>
+  <div class="cards">
+    <div class="card"><h3>Training-set scale</h3><p>Quadrupling the LOCO training set from 225 to 900 images narrows the gap by 0.80 mIoU (95% CI [0.46, 1.14]), from 6.48 to 5.50. The upper bound stays significantly ahead in every 900-image cell.</p></div>
+    <div class="card"><h3>Appearance statistics</h3><p>Matching each test image's pixel histogram to the training cities improves none of the 9 vanilla cells and lowers mean mIoU by 0.45. Retraining with strong appearance-only augmentation leaves six of nine gaps within twice their seed-to-seed spread.</p></div>
+    <div class="card"><h3>Encoder fine-tuning</h3><p>With the DINOv3 encoder frozen and only the decoder trained, the upper bound still exceeds LOCO by 7.10, 2.67 and 2.75 mIoU on Chicago, Miami and Phoenix.</p></div>
+    <div class="card"><h3>Pretraining and learning rate</h3><p>We trained MAMNet with a ResNet-50 encoder under supervised or self-supervised pretraining, each at a high or low learning rate. Encoder retraining recovers all four versions (median <em>R</em> 0.80 to 0.87).</p></div>
+  </div>
+  <p class="callout">Limits of these tests: three cities cannot separate a Phoenix-specific appearance effect from Phoenix's larger seed variance, and pretraining scale remains confounded between DINOv3 and the self-supervised ResNet-50. Full protocols and caveats are in Appendix H.</p>
+</section>
+
+<section class="wrap" id="diagnosis">
+  <h2>Diagnosing the transfer failure</h2>
+  <p>Three controlled probes on the LOCO models locate the failure. They are ordered by what a practitioner would try first.</p>
+</section>
+<div class="wide"><figure><img src="assets/qualitative.jpg" alt="Input, ground truth and predicted shadow probability under upper bound, LOCO and SIB for three architectures." loading="lazy">
+  <figcaption><strong>Under LOCO, predicted shadow probability decreases over true shadow regions while the background stays dark.</strong> Columns: input, ground truth (white = shadow), and predicted shadow probability under the within-city upper bound, LOCO and SIB. <span style="font-style:italic">p&#772;<sub>S</sub></span>: mean predicted shadow probability inside true shadow.</figcaption></figure></div>
+<section class="wrap">
+  <h3>1. Histogram alignment lowers mIoU</h3>
+  <p>Matching each test image's intensity histogram to the training cities lowers mean mIoU by 0.45 across the 9 vanilla LOCO cells, and no cell improves. At the median, matched images lie 2.5 to 3.7 times as far from the upper bound as the unmatched LOCO predictions. A pixel-level shortcut would predict partial recovery, so this result indicates that an effective intervention must act on learned features.</p>
+  <h3>2. The selective-prediction gap concentrates on shadow pixels</h3>
+  <p>Deployed systems use confidence-thresholded predictions, so we measured how threshold-conditioned error rises under transfer. On shadow pixels the gap averages +0.136 across 63 cells; on background pixels it averages +0.006. True-positive logits drop by 0.85 nats on average, while false-positive logits change by &minus;0.15 nats. The same foreground-concentrated pattern appears when we repeat the protocol on INRIA building footprints, a task whose foreground class is defined by building shape.</p>
+  <h3>3. The recoverable component depends on the architecture</h3>
+  <p>Retraining only the decoder on 25% of the held-out city's training data recovers DINOv3 (<em>R</em> = 0.69) and MAMNet (<em>R</em> = 0.67) and leaves OGLANet near its LOCO level (<em>R</em> = 0.12). Retraining only the encoder lowers DINOv3 below LOCO (<em>R</em> = &minus;0.13) and recovers both CNNs (<em>R</em> = 0.88 MAMNet, <em>R</em> = 0.86 OGLANet). This architecture dependence is consistent with the adaptation results above, where ISW and MRFP+ each act on a fixed component and their cost differs across architectures.</p>
+</section>
+<div class="wide"><figure><img src="assets/diagnostics.jpg" alt="Risk-coverage curves, per-method foreground versus background AURC gap, and recovery ratios under decoder and encoder retraining." loading="lazy">
+  <figcaption><strong>Figure 3. The selective-prediction gap concentrates on shadow pixels, and the recoverable component depends on the architecture.</strong> (a) Risk-coverage curves on shadow pixels (MAMNet, Phoenix held out); inset: the foreground gap replicates on INRIA. (b) Per-method AURC gap: concentrated on shadow pixels, with a pooled background gap 24&times; smaller. (c) Recovery ratio <em>R</em> under decoder (Exp A) and encoder (Exp B) retraining; 1 means full recovery.</figcaption></figure></div>
+<section class="wrap">
+  <p>We repeated the benchmark and the three probes on S-EO (WorldView-3 imagery of Omaha, Jacksonville and San Diego). The upper bound exceeds LOCO in all 12 (architecture, held-out city) pairs, and histogram matching lowers mIoU in all 36 vanilla cells. On S-EO the background probability also shifts in 10 of 12 pairs, so the confidence change there extends beyond the shadow class.</p>
+</section>
+
+<section class="wrap" id="sib">
+  <h2>Case study: SIB</h2>
+  <p>To check whether the diagnosis gives usable design guidance, we built the Spectral Information Bottleneck (SIB), a plug-in module with one component per finding. A Haar-wavelet bottleneck on the encoder output compresses low-frequency, city-specific content strongly and boundary subbands gently. Skip gates and Fourier Domain Adaptation preprocessing apply to CNN backbones only, since ViTs carry their recoverable component in the decoder. At deployment, a coverage threshold fitted on source-city validation data uses no held-out labels.</p>
+  <p>Over the 9 cells, SIB has the smallest mean gap to the within-city upper bound of the ten methods we evaluate, 6.42 mIoU (95% CI [5.01, 7.96]), level with FDA at 6.47. Its worst-case gap, 10.41 mIoU (OGLANet, Miami), is second to FDA's 9.10 and cannot be separated from it. SIB still leaves a significant gap in all 9 cells. We designed SIB on the same cells we evaluate it on, so the result shows that the diagnosis yields a usable design and does not test the diagnosis independently.</p>
+</section>
+<div class="wide"><figure><img src="assets/sib.jpg" alt="SIB module diagram and per-method gap to the within-city upper bound." loading="lazy">
+  <figcaption><strong>Figure 4. SIB has the smallest mean gap to the upper bound of the ten methods, level with FDA.</strong> (a) The SIB module, with components grouped by the finding they target. (b) Gap to the within-city upper bound across 9 LOCO cells; open markers: mean with 95% CI; filled: worst cell; dashed line: vanilla mean gap.</figcaption></figure></div>
+
+<section class="wrap" id="use">
+  <h2>Use the benchmark</h2>
+  <p>The dataset is on Hugging Face in two layouts holding the same images and masks: <code>data_cities/</code> (per city, resolution and split) and <code>data_loco/</code> (the three leave-one-city-out folds). Download one or both:</p>
+<pre><code>from huggingface_hub import snapshot_download
+
+path = snapshot_download(
+    repo_id="shagunmittal/ShadowTransfer",
+    repo_type="dataset",
+    allow_patterns=["data_loco/*"],   # or "data_cities/*"
+)
+# data_loco/fold_0_holdout_phoenix/highres/{train,val,test}/{images,masks}/</code></pre>
+  <p>To compare a new method with the paper:</p>
+  <ul>
+    <li>report all three held-out cities at both resolutions, six test cells per method;</li>
+    <li>score two-class boundary-tolerant mIoU at K = 2 with <code>shadowtransfer/metrics.py</code> from the <a href="https://github.com/shagun8/shadowtransfer">code repository</a>;</li>
+    <li>report the gap to the within-city upper bound on the same test images alongside the LOCO score.</li>
+  </ul>
+  <h3>Intended and unsupported uses</h3>
+  <p>Beyond benchmarking geographic transfer, the masks and per-patch metadata support building footprint and fa&ccedil;ade extraction (as occlusion priors), shadow-removal research, domain generalization for dense prediction, and urban-morphology or solar-geometry analysis. The data does not support claims about generalization beyond grid-pattern North American cities, beyond NAIP RGB sensors, or across seasons, and the 0.3&nbsp;m and 0.6&nbsp;m subsets should not be synthesized from each other.</p>
+</section>
+
+<section class="wrap" id="limits">
+  <h2>Limitations</h2>
+  <p>The benchmark covers three U.S. cities, RGB-only NAIP imagery, a single fall season and four architectures. We characterize where the failure occurs, how it distorts predictions and which component recovers it, but we do not isolate a causal mechanism connecting these. DINOv3's decoder locus cannot be attributed to its ViT architecture alone, since no CNN in our tests matches its pretraining scale.</p>
+</section>
+
+<section class="wrap" id="cite">
+  <h2>Cite</h2>
+  <p>Paper:</p>
+  <pre class="bib"><button class="copy" data-target="bib-paper">Copy</button><code id="bib-paper">@inproceedings{mittal2026shadowtransfer,
+  title     = {ShadowTransfer: A Geographic Transfer Benchmark for Overhead Shadow Detection},
+  author    = {Mittal, Shagun and Yeh, Raymond A. and Ukkusuri, Satish},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Track on Evaluations and Datasets},
+  year      = {2026}
+}</code></pre>
+  <p>Dataset release (DOI):</p>
+  <pre class="bib"><button class="copy" data-target="bib-data">Copy</button><code id="bib-data">@misc{mittal2026shadowtransferdata,
+  author    = {Mittal, Shagun and Yeh, Raymond A. and Ukkusuri, Satish},
+  title     = {{ShadowTransfer} (Revision 5bef90e)},
+  year      = {2026},
+  publisher = {Hugging Face},
+  doi       = {10.57967/hf/11483},
+  url       = {https://huggingface.co/datasets/shagunmittal/ShadowTransfer}
+}</code></pre>
+  <p>Please also credit the USDA Farm Service Agency Aerial Photography Field Office for the NAIP imagery.</p>
+</section>
+</main>
+
+<footer><div class="wrap">
+  <p><strong>License.</strong> Code: MIT. Masks and metadata: CC BY 4.0. NAIP imagery: U.S. public domain (USDA-FSA APFO attribution requested).</p>
+  <p><strong>Acknowledgements.</strong> This work used Delta at the National Center for Supercomputing Applications (NCSA) through allocation CIS260282 from the Advanced Cyberinfrastructure Coordination Ecosystem: Services &amp; Support (ACCESS) program, which is supported by U.S. National Science Foundation grants #2138259, #2138286, #2138307, #2137603 and #2138296.</p>
+  <p>Contact: Shagun Mittal (mittal53@purdue.edu) &middot; Issues: <a href="https://github.com/shagun8/shadowtransfer/issues">GitHub</a> or the <a href="https://huggingface.co/datasets/shagunmittal/ShadowTransfer/discussions">Hugging Face discussions</a>.</p>
+</div></footer>
+
+<script>
+document.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>{
+  const img=t.querySelector('img'); const m=img.src.includes('_mask');
+  img.src='assets/gallery/'+t.dataset.c+'_'+t.dataset.r+(m?'_img':'_mask')+'.jpg';
+}));
+const all=document.getElementById('all-masks');
+all.addEventListener('click',()=>{
+  const on=all.getAttribute('aria-pressed')!=='true'; all.setAttribute('aria-pressed',on);
+  all.textContent=on?'Show all photos':'Show all shadow masks';
+  document.querySelectorAll('.tile').forEach(t=>{t.querySelector('img').src='assets/gallery/'+t.dataset.c+'_'+t.dataset.r+(on?'_mask':'_img')+'.jpg';});
+});
+document.querySelectorAll('.copy').forEach(b=>b.addEventListener('click',()=>{
+  navigator.clipboard.writeText(document.getElementById(b.dataset.target).textContent);
+  b.textContent='Copied'; setTimeout(()=>b.textContent='Copy',1500);
+}));
+</script>
+</body>
+</html>

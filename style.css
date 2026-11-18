@@ -1,0 +1,57 @@
+
+:root{--ink:#1f2328;--muted:#57606a;--line:#e5e7eb;--bg:#fff;--soft:#f6f8fa;--accent:#3B5C7A;--chi:#3B5C7A;--mia:#C97A4F;--phx:#8B4A3C}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+.wide{max-width:1120px;margin:0 auto;padding:0 22px}
+header.hero{padding:56px 0 28px;text-align:center;border-bottom:1px solid var(--line)}
+.venue{display:inline-block;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 12px;margin-bottom:14px}
+h1{font-size:40px;line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+h1 .sub{display:block;font-size:22px;font-weight:500;color:var(--muted);margin-top:8px}
+.authors{font-size:18px;margin:18px 0 2px}
+.authors sup{color:var(--muted)}
+.affil{color:var(--muted);font-size:15px}
+.note{color:var(--muted);font-size:13px;margin-top:2px}
+.buttons{margin:22px 0 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:999px;background:var(--ink);color:#fff;text-decoration:none;font-size:15px;font-weight:600}
+.btn.alt{background:#fff;color:var(--ink);border:1px solid var(--ink)}
+.btn.off{background:#d0d7de;color:#57606a;pointer-events:none}
+section{padding:34px 0 8px}
+h2{font-size:27px;line-height:1.25;margin:0 0 14px;letter-spacing:-.005em}
+h3{font-size:19px;margin:22px 0 6px}
+p{margin:0 0 14px}
+.tldr{background:var(--soft);border-left:4px solid var(--accent);padding:16px 20px;border-radius:6px;font-size:17.5px}
+figure{margin:22px 0 26px}
+figure img,figure object{width:100%;height:auto;display:block;border-radius:6px}
+figcaption{color:var(--muted);font-size:14.5px;line-height:1.5;margin-top:8px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14.5px;margin:10px 0 6px}
+table.cmp th,table.cmp td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left}
+table.cmp th{font-weight:600;background:var(--soft)}
+table.cmp tr.ours td{font-weight:600;background:#eef4fa}
+.gal-ctl{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:6px 0 12px;font-size:15px}
+.toggle{border:1px solid var(--ink);background:#fff;border-radius:999px;padding:6px 14px;font:inherit;cursor:pointer}
+.toggle[aria-pressed=true]{background:var(--ink);color:#fff}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.city h4{margin:0 0 6px;font-size:16px}
+.city.chi h4{color:var(--chi)}.city.mia h4{color:var(--mia)}.city.phx h4{color:var(--phx)}
+.tile{position:relative;margin-bottom:10px;cursor:pointer}
+.tile img{width:100%;display:block;border-radius:5px}
+.tile span{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.72);color:#fff;font-size:12px;font-weight:600;padding:2px 7px;border-radius:4px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13.5px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:8px 0 18px}
+.card{border:1px solid var(--line);border-radius:8px;padding:14px 16px;background:#fff}
+.card h3{margin:0 0 6px;font-size:16.5px}
+.card p{font-size:15.5px;margin:0}
+.callout{font-size:15px;color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
+pre{background:#0d1117;color:#e6edf3;padding:14px 16px;border-radius:8px;overflow:auto;font-size:13.5px;line-height:1.5}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em}
+p code,li code{background:var(--soft);padding:1px 5px;border-radius:4px}
+ul{padding-left:22px;margin:0 0 14px}
+li{margin:3px 0}
+.copy{float:right;font-size:12.5px;border:1px solid #57606a;background:#161b22;color:#e6edf3;border-radius:5px;padding:2px 8px;cursor:pointer}
+footer{border-top:1px solid var(--line);margin-top:36px;padding:22px 0 40px;color:var(--muted);font-size:14px}
+@media (max-width:760px){h1{font-size:30px}h1 .sub{font-size:18px}.gallery{grid-template-columns:1fr}.cards{grid-template-columns:1fr}body{font-size:16px}}
+pre.bib{white-space:pre-wrap;word-break:break-word}
