@@ -7,6 +7,7 @@ three segmentation backbones (**MAMNet**, **OGLANet**, **DINOv3**) under a leave
 the paper, our method (**SIB**), and the diagnostic analyses behind Sections 4–5 and the
 appendices.
 
+- **Paper:** [arXiv:2611.24904](https://arxiv.org/abs/2611.24904) · [OpenReview](https://openreview.net/forum?id=nsoesUF2ic)
 - **Dataset:** <https://huggingface.co/datasets/shagunmittal/ShadowTransfer>
   (DOI [10.57967/hf/11483](https://doi.org/10.57967/hf/11483))
 - **Project page:** <https://shagun8.github.io/shadowtransfer/>
